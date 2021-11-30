@@ -1,0 +1,8 @@
+
+ref:
+  # Ensembl species name
+  species: caenorhabditis_elegans
+  # Ensembl release
+  release: 104
+  # Genome build
+  build: WBcel235
