@@ -6,6 +6,7 @@ rule all:
         "resources/genome.gtf",
         "resources/genome.fasta",
         "resources/genome.fasta.fai",
+        "resources/star_genome",
 
 
 include: "rules/download.smk"
