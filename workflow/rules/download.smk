@@ -10,7 +10,7 @@ rule get_genome:
         release=config["ref"]["release"],
     cache: True
     wrapper:
-        "0.77.0/bio/reference/ensembl-sequence"
+        "0.80.2/bio/reference/ensembl-sequence"
 
 
 rule get_annotation:
@@ -26,4 +26,4 @@ rule get_annotation:
     log:
         "logs/get_annotation.log",
     wrapper:
-        "0.77.0/bio/reference/ensembl-annotation"
+        "0.80.2/bio/reference/ensembl-annotation"
