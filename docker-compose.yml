@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.7'
 
 volumes:
   snakemake-cache:
@@ -6,9 +6,12 @@ volumes:
 
 services:
   workflow:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: workflow
     container_name: reference_genomes
     volumes:
       - snakemake-cache:/mnt/snakemake-cache
-      - conda-envs:/mnt/conda
+      - conda-envs:/mnt/snakemake-envs
       - ./workflow:/usr/src/code/workflow
