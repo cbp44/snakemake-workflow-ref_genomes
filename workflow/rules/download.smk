@@ -51,11 +51,15 @@ rule download_vcf_annotation:
     cache: True
     wildcard_constraints:
         species="homo_sapiens",
-        vcf_type="|".join(["clinically_associated",
-                           "phenotype_associated",
-                           "somatic",
-                           "somatic_incl_consequences",
-                           "structural_variations"]),
+        vcf_type="|".join(
+            [
+                "clinically_associated",
+                "phenotype_associated",
+                "somatic",
+                "somatic_incl_consequences",
+                "structural_variations"
+            ]
+        ),
     shell:
         # Note: --insecure used for large files because https fails to connect, but http times out
         "(curl -o {output.vcf} --insecure https://ftp.ensembl.org/pub/release-{params.release}/variation/vcf/{wildcards.species}/{wildcards.species}_{wildcards.vcf_type}.vcf.gz; "
