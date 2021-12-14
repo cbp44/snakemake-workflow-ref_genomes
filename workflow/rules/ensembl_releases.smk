@@ -4,7 +4,7 @@ rule get_ensembl_genome_list:
     log:
         "logs/ensembl-{release}-supported_genomes.txt",
     conda:
-        "../envs/curl.yaml",
+        "../envs/curl.yaml"
     shell:
         "(curl -o {output} http://ftp.ensembl.org/pub/release-{wildcards.release}/species_EnsemblVertebrates.txt) &> {log}"
 
@@ -16,7 +16,7 @@ rule extract_supported_genomes:
     params:
         supported_genomes="|".join(config.get('supported_organisms', ['mus_musculus'])),
     conda:
-        "../envs/awk.yaml",
+        "../envs/awk.yaml"
     log:
         "logs/ensembl-{release}-supported_genomes.txt",
     shell:

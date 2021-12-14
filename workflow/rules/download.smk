@@ -2,9 +2,9 @@ rule download_genome:
     output:
         fasta="resources/{species}/genome.fa",
     conda:
-        "../envs/curl.yaml"
+        "../envs/curl.yaml",
     log:
-        "logs/download-{species}-genome.log"
+        "logs/download-{species}-genome.log",
     shadow:
         "shallow"
     params:
@@ -21,9 +21,9 @@ rule download_annotation:
     output:
         gtf="resources/{species}/genome.gtf",
     conda:
-        "../envs/curl.yaml"
+        "../envs/curl.yaml",
     log:
-        "logs/download-{species}-annotation.log"
+        "logs/download-{species}-annotation.log",
     shadow:
         "shallow"
     params:

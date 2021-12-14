@@ -11,7 +11,12 @@ container: "docker://continuumio/miniconda3:4.10.3"
 
 rule all:
     input:
-        multiext("resources/{species}/genome".format(species=config['ref']['species']), ".fa", ".fa.fai", ".gtf"),
+        multiext(
+            "resources/{species}/genome".format(species=config['ref']['species']), 
+            ".fa", 
+            ".fa.fai", 
+            ".gtf"
+        ),
         "resources/{species}/star_genome".format(species=config['ref']['species']),
 
 

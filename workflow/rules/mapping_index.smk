@@ -17,12 +17,12 @@ rule star_index:
     output:
         directory("resources/{species}/star_genome"),
     conda:
-        "../envs/star.yaml",
+        "../envs/star.yaml"
     threads: 1
     params:
         extra=lambda wc, input: "--sjdbGTFfile {0} --genomeSAindexNbases 12".format(
-            input.annotation)
-        ,
+            input.annotation
+        ),
         sjdbOverhang="99",  # Sequencing read lenegth - 1
         fasta=lambda wc, input: "--genomeFastaFiles {0}".format(input.fasta),
         gtf=lambda wc, input: "{0}".format(input.annotation),
