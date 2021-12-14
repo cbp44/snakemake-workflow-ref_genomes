@@ -1,0 +1,9 @@
+name: curl
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ca-certificates
+  - curl
+  - gzip
+  

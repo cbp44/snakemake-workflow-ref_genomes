@@ -10,8 +10,9 @@ services:
       context: .
       dockerfile: Dockerfile
       target: workflow
-    container_name: reference_genomes
+    init: true
     volumes:
       - snakemake-cache:/mnt/snakemake-cache
       - conda-envs:/mnt/snakemake-envs
       - ./workflow:/usr/src/code/workflow
+      - ./config:/usr/src/code/config
