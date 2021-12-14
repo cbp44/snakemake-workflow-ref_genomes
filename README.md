@@ -22,5 +22,7 @@ vagrant> cd /vagrant
 vagrant> sudo docker-compose build
 vagrant> sudo docker-compose run --rm workflow bash
 
-docker> snakemake --use-conda -p --cores=all 
+docker> copier /usr/src/code /usr/src/test
+docker> cd /usr/src/test
+docker> snakemake --use-conda -p --cores=all --cache
 ```

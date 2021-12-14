@@ -7,7 +7,7 @@ _exclude:
   - ".test"
   - ".vagrant"
   - ".snakemake"
-  - "logs
+  - "logs"
   - "_STARtmp"
   - "resources"
   - "results"
@@ -18,7 +18,6 @@ _exclude:
   - "copier.yml"
   - "docker-compose.yml"
   - "Dockerfile"
-  - "README.md"
   - "Vagrantfile"
 
 # QUESTIONS FOR USER -------------------------
@@ -52,7 +51,7 @@ species:
 
 ensembl_release:
   type: int
-  help: "Enter the Ensembl release number to use for the [[ species|capitalize|list|first ]] reference genome"
+  help: "Enter the Ensembl release number to use for the [[ species|capitalize|replace('_',' ') ]] reference genome"
   default: 105
   choices:
     - 104
