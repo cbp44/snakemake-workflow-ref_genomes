@@ -20,12 +20,12 @@ _exclude:
 species:
   type: str
   help: Give the species whose reference genome we are obtaining
-  default: "M. musculus"
+  default: mus_musculus
   choices:
-    "C. elegens": "caenorhabditis_elegans"
-    "H. sapiens": "homo_sapiens"
-    "D. rerio": "danio_rerio"
-    "M. musculus": "mus_musculus"
+    - caenorhabditis_elegans
+    - homo_sapiens
+    - danio_rerio
+    - mus_musculus
 
 ensembl_release:
   type: int
@@ -34,5 +34,5 @@ ensembl_release:
 
 genome_build:
   type: str
-  help: "Provide the genome build number to use for the {{ species }} reference genome"
-  default: "{% if species == 'C. elegens' %}WBcel235{% else if species == 'H. sapiens' %}humans{% else if species == 'D. rerio' %}danio_rerio{% else if species == 'M. musculus' %}mouse{% endif %}"
+  help: "{{ ensembl_release }} Provide the genome build number to use for the {{ species }} reference genome"
+  default: "{% if species == 'caenorhabditis_elegans' %}WBcel235{% else if species == 'H. sapiens' %}humans{% else if species == 'D. rerio' %}danio_rerio{% else if species == 'M. musculus' %}mouse{% endif %}"
