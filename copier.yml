@@ -1,0 +1,6 @@
+_answers_file: .workflow-answers.yml
+
+project_name:
+  type: str
+  help: Give a name for the project
+  default: sample_name
