@@ -6,6 +6,9 @@ min_version("5.0")
 configfile: "config/config.yaml"
 
 
+container: "docker://continuumio/miniconda3:4.10.3"
+
+
 rule all:
     input:
         multiext("resources/{species}/genome".format(species=config['ref']['species']), ".fa", ".fa.fai", ".gtf"),

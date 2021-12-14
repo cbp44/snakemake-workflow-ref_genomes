@@ -27,4 +27,4 @@ rule star_index:
     log:
         "logs/{species}-star_index.log",
     shell:
-        "STAR --runMode genomeGenerate {params.extra} --runThreadN {threads} --genomeDir {output[0]} {params.fasta} --sjdbOverhang {params.sjdbOverhang} {params.gtf} &> {log}"
+        "STAR --runMode genomeGenerate {params.extra} --runThreadN {threads} --genomeDir {output} {params.fasta} --sjdbOverhang {params.sjdbOverhang} {params.gtf} &> {log}"
