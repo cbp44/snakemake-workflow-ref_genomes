@@ -29,10 +29,10 @@ species:
 
 ensembl_release:
   type: int
-  help: Enter the Ensembl release number to use for the {{ species }} reference genome
+  help: "Enter the Ensembl release number to use for the {{ species }} reference genome"
   default: 104
 
 genome_build:
   type: str
-  help: Provide the genome build number to use for the {{ species }} reference genome
+  help: "Provide the genome build number to use for the {{ species }} reference genome"
   default: "{% if species == 'C. elegens' %}WBcel235{% else if species == 'H. sapiens' %}humans{% else if species == 'D. rerio' %}danio_rerio{% else if species == 'M. musculus' %}mouse{% endif %}"
