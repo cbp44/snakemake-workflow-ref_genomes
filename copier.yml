@@ -1,6 +1,38 @@
+
 _answers_file: .workflow-answers.yml
 
-project_name:
+_exclude:
+  - ".github"
+  - ".test"
+  - ".vagrant"
+  - ".git"
+  - "docker"
+  - ".dockerignore"
+  - ".editorconfig"
+  - ".gitattributes"
+  - ".gitignore"
+  - "docker-compose.yml"
+  - "Dockerfile"
+  - "LICENSE"
+  - "README.md"
+  - "Vagrantfile"
+
+species:
   type: str
-  help: Give a name for the project
-  default: sample_name
+  help: Give the species whose reference genome we are obtaining
+  default: "M. musculus"
+  choices:
+    "C. elegens": "caenorhabditis_elegans"
+    "H. sapiens": "homo_sapiens"
+    "D. rerio": "danio_rerio"
+    "M. musculus": "mus_musculus"
+
+ensembl_release:
+  type: int
+  help: Enter the Ensembl release number to use for the {{ species }} reference genome
+  default: 104
+
+genome_build:
+  type: str
+  help: Provide the genome build number to use for the {{ species }} reference genome
+  default: "{% if species == 'C. elegens' %}WBcel235{% else if species == 'H. sapiens' %}humans{% else if species == 'D. rerio' %}danio_rerio{% else if species == 'M. musculus' %}mouse{% endif %}"
