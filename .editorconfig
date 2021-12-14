@@ -7,10 +7,17 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-[*.{yml,yaml}]
+[*.jinja]
+insert_final_newline = false
+
+[Dockerfile]
 indent_style = space
 indent_size = 2
 
-[Dockerfile]
+[*.md]
+indent_style = space
+indent_size = 2
+
+[*.{yml,yaml}]
 indent_style = space
 indent_size = 2

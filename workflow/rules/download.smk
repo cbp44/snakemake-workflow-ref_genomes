@@ -1,29 +1,32 @@
-rule get_genome:
+rule download_genome:
     output:
-        "resources/genome.fasta",
-    log:
-        "logs/get-genome.log",
+        fasta="resources/{species}/genome.fa",
+    conda:
+        "../envs/curl.yaml"
+    shadow:
+        "shallow"
     params:
-        species=config["ref"]["species"],
-        datatype="dna",
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-    cache: True
-    wrapper:
-        "0.80.2/bio/reference/ensembl-sequence"
+        release=config['ref']['release'],
+    # cache: True
+    shell:
+        # Note: --insecure used for large files because https fails to connect, but http times out
+        "curl http://ftp.ensembl.org/pub/release-{params.release}/fasta/{wildcards.species}/dna_index/CHECKSUMS | sed 's/  */ /g' | cut -d ' ' -f 3 > files.txt; "
+        "curl -o {output.fasta}.gz --insecure https://ftp.ensembl.org/pub/release-{params.release}/fasta/{wildcards.species}/dna_index/$(grep '.fa.gz$' files.txt); "
+        "gunzip {output.fasta}.gz"
 
 
-rule get_annotation:
+rule download_annotation:
     output:
-        "resources/genome.gtf",
+        gtf="resources/{species}/genome.gtf",
+    conda:
+        "../envs/curl.yaml"
+    shadow:
+        "shallow"
     params:
-        species=config["ref"]["species"],
-        fmt="gtf",
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-        flavor="",
-    cache: True
-    log:
-        "logs/get_annotation.log",
-    wrapper:
-        "0.80.2/bio/reference/ensembl-annotation"
+        release=config['ref']['release'],
+    # cache: True
+    shell:
+        # Note: --insecure used for large files because https fails to connect, but http times out
+        "curl http://ftp.ensembl.org/pub/release-{params.release}/gtf/{wildcards.species}/CHECKSUMS | sed 's/  */ /g' | cut -d ' ' -f 3 > files.txt; "
+        "curl -o {output.gtf}.gz --insecure https://ftp.ensembl.org/pub/release-{params.release}/gtf/{wildcards.species}/$(grep '{params.release}.gtf.gz$' files.txt); "
+        "gunzip {output.gtf}.gz"

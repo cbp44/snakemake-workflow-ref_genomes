@@ -1,11 +1,17 @@
+from snakemake.utils import min_version
+
+min_version("5.0")
+
+
 configfile: "config/config.yaml"
 
 
 rule all:
     input:
-        "resources/star_genome",
+        multiext("resources/{species}/genome".format(species=config['ref']['species']), ".fa", ".fa.fai", ".gtf"),
+        "resources/{species}/star_genome".format(species=config['ref']['species']),
 
 
-include: "rules/common.smk"
 include: "rules/download.smk"
+include: "rules/ensembl_releases.smk"
 include: "rules/mapping_index.smk"

@@ -1,28 +1,30 @@
 rule genome_faidx:
     input:
-        "resources/genome.fasta",
+        "resources/{species}/genome.fa",
     output:
-        "resources/genome.fasta.fai",
+        "resources/{species}/genome.fa.fai",
     log:
-        "logs/genome-faidx.log",
-    cache: True
+        "logs/{species}-genome_faidx.log",
     wrapper:
         "0.80.2/bio/samtools/faidx"
-
 
 ## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
 rule star_index:
     input:
-        fasta="resources/genome.fasta",
-        fai="resources/genome.fasta.fai",
-        annotation="resources/genome.gtf",
+        fasta="resources/{species}/genome.fa",
+        fai="resources/{species}/genome.fa.fai",
+        annotation="resources/{species}/genome.gtf",
     output:
-        directory("resources/star_genome"),
-    threads: 4
+        directory("resources/{species}/star_genome"),
+    conda:
+        "../envs/star.yaml"
+    threads: 1
     params:
-        extra="--sjdbGTFfile resources/genome.gtf --sjdbOverhang 100ls --genomeSAindexNbases 12",
+        extra=lambda wc, input: "--sjdbGTFfile {0} --genomeSAindexNbases 12".format(input.annotation),
+        sjdbOverhang="99",  # Sequencing read lenegth - 1
+        fasta=lambda wc, input: "--genomeFastaFiles {0}".format(input.fasta),
+        gtf=lambda wc, input: "{0}".format(input.annotation),
     log:
-        "logs/star_index_genome.log",
-    cache: True
-    wrapper:
-        "0.80.2/bio/star/index"
+        "logs/{species}-star_index.log",
+    shell:
+        "STAR --runMode genomeGenerate {params.extra} --runThreadN {threads} --genomeDir {output[0]} {params.fasta} --sjdbOverhang {params.sjdbOverhang} {params.gtf} &> {log}"

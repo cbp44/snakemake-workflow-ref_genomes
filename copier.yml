@@ -1,22 +1,59 @@
+# CONFIGURATION -------------------------
+_templates_suffix: .jinja
+_exclude:
+  - ".docker"
+  - ".git"
+  - ".github"
+  - ".test"
+  - ".vagrant"
+  - ".snakemake"
+  - "logs
+  - "_STARtmp"
+  - "resources"
+  - "results"
+  - ".dockerignore"
+  - ".editorconfig"
+  - ".gitattributes"
+  - ".gitignore"
+  - "copier.yml"
+  - "docker-compose.yml"
+  - "Dockerfile"
+  - "README.md"
+  - "Vagrantfile"
 
-_answers_file: .copier-answers.yml
-
+# QUESTIONS FOR USER -------------------------
 species:
   type: str
   help: Give the species whose reference genome we are obtaining
-  default: mus_musculus
+  default: caenorhabditis_elegans
   choices:
-    - caenorhabditis_elegans
-    - homo_sapiens
-    - danio_rerio
-    - mus_musculus
+    "Human": "homo_sapiens"
+    "Mouse": "mus_musculus"
+    "Zebrafish": "danio_rerio"
+    "Worm (C. elegans)": "caenorhabditis_elegans"
+    "Fruitfly (D. melanogaster)": "drosophila_melanogaster"
+    "Mouse Lemur": "microcebus_murinus"
+    # "Mouse 129S1/SvImJ": "mus_musculus_129s1svimj"
+    # "Mouse A/J": "mus_musculus_aj"
+    # "Mouse AKR/J": "mus_musculus_akrj"
+    # "Mouse BALB/cJ": "mus_musculus_balbcj"
+    # "Mouse C3H/HeJ": "mus_musculus_c3hhej"
+    # "Mouse C57BL/6NJ": "mus_musculus_c57bl6nj"
+    # "Mouse CAST/EiJ": "mus_musculus_casteij"
+    # "Mouse CBA/J": "mus_musculus_cbaj"
+    # "Mouse DBA/2J": "mus_musculus_dba2j"
+    # "Mouse FVB/NJ": "mus_musculus_fvbnj"
+    # "Mouse LP/J": "mus_musculus_lpj"
+    # "Mouse NOD/ShiLtJ": "mus_musculus_nodshiltj"
+    # "Mouse NZO/HlLtJ": "mus_musculus_nzohlltj"
+    # "Mouse PWK/PhJ": "mus_musculus_pwkphj"
+    # "Mouse WSB/EiJ": "mus_musculus_wsbeij"
+
 
 ensembl_release:
   type: int
-  help: Enter the Ensembl release number to use for the reference genome
-  default: 104
-
-genome_build:
-  type: str
-  help: Provide the genome build number to use for the reference genome
-  placeholder: mm10
+  help: "Enter the Ensembl release number to use for the [[ species|capitalize|list|first ]] reference genome"
+  default: 105
+  choices:
+    - 104
+    - 105
