@@ -8,6 +8,7 @@ rule genome_faidx:
     wrapper:
         "0.80.2/bio/samtools/faidx"
 
+
 ## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
 rule star_index:
     input:

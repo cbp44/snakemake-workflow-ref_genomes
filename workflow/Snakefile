@@ -15,7 +15,7 @@ rule all:
             "resources/{species}/genome".format(species=config['ref']['species']), 
             ".fa", 
             ".fa.fai", 
-            ".gtf"
+            ".gtf",
         ),
         "resources/{species}/star_genome".format(species=config['ref']['species']),
 

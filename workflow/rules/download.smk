@@ -2,13 +2,13 @@ rule download_genome:
     output:
         fasta="resources/{species}/genome.fa",
     conda:
-        "../envs/curl.yaml",
+        "../envs/curl.yaml"
     log:
         "logs/download-{species}-genome.log",
     shadow:
         "shallow"
     params:
-        release=config['ref']['release'],
+        release=config["ref"]["release"],
     # cache: True
     shell:
         # Note: --insecure used for large files because https fails to connect, but http times out
@@ -21,13 +21,13 @@ rule download_annotation:
     output:
         gtf="resources/{species}/genome.gtf",
     conda:
-        "../envs/curl.yaml",
+        "../envs/curl.yaml"
     log:
         "logs/download-{species}-annotation.log",
     shadow:
         "shallow"
     params:
-        release=config['ref']['release'],
+        release=config["ref"]["release"],
     # cache: True
     shell:
         # Note: --insecure used for large files because https fails to connect, but http times out
