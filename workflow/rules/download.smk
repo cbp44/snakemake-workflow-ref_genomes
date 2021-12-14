@@ -57,7 +57,7 @@ rule download_vcf_annotation:
                 "phenotype_associated",
                 "somatic",
                 "somatic_incl_consequences",
-                "structural_variations"
+                "structural_variations",
             ]
         ),
     shell:
