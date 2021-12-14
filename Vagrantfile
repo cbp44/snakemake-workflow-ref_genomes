@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
         devbox.vm.provider :libvirt do |domain|
             domain.title = "snakemake-workflow-ref_genomes"
 
-            domain.memory = 2048
+            domain.memory = 4096
             domain.cpus = 2
             domain.cpu_mode = "host-model"
             domain.random_hostname = true
