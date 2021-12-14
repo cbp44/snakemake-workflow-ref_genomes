@@ -1,21 +1,5 @@
 
-_answers_file: .workflow-answers.yml
-
-_exclude:
-  - ".github"
-  - ".test"
-  - ".vagrant"
-  - ".git"
-  - "docker"
-  - ".dockerignore"
-  - ".editorconfig"
-  - ".gitattributes"
-  - ".gitignore"
-  - "docker-compose.yml"
-  - "Dockerfile"
-  - "LICENSE"
-  - "README.md"
-  - "Vagrantfile"
+_answers_file: .copier-answers.yml
 
 species:
   type: str
@@ -29,10 +13,10 @@ species:
 
 ensembl_release:
   type: int
-  help: Enter the Ensembl release number to use for the {{ species }} reference genome
+  help: Enter the Ensembl release number to use for the reference genome
   default: 104
 
 genome_build:
   type: str
-  help: "{{ ensembl_release }} Provide the genome build number to use for the {{ species }} reference genome"
-  default: "{% if species == 'caenorhabditis_elegans' %}WBcel235{% else if species == 'H. sapiens' %}humans{% else if species == 'D. rerio' %}danio_rerio{% else if species == 'M. musculus' %}mouse{% endif %}"
+  help: Provide the genome build number to use for the reference genome
+  placeholder: mm10
