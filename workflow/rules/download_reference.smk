@@ -10,8 +10,8 @@ rule download_genome_fasta:
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-                config["ref"]["release"], "fasta", wc.species, "dna_index"
-            ),
+            config["ref"]["release"], "fasta", wc.species, "dna_index"
+        ),
         file_ext=".fa.gz",
     cache: True
     shell:
@@ -65,7 +65,7 @@ rule download_vcf_annotation:
         base_url=lambda wc: get_ensembl_base_url(
             config["ref"]["release"],
             "variation/vcf",
-            wc.species, 
+            wc.species,
             "{0}_{1}".format(wc.species, wc.vcf_type),
         ),
     cache: True
