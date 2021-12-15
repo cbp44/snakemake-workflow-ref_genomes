@@ -23,7 +23,7 @@ rule download_genome_fasta:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 > files.txt; "
-        "curl -o {output.fasta}.gz {params.curl} {params.base_url}/""$(grep '{params.file_ext}$' files.txt)""; "
+        "curl -o {output.fasta}.gz {params.curl} {params.base_url}/" "$(grep '{params.file_ext}$' files.txt)" "; "
         "gunzip {output.fasta}.gz"
         ") &> {log}"
 
@@ -42,17 +42,17 @@ rule download_gene_annotation:
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-                config["ref"]["release"],
-                "gtf",
-                wc.species
-            ),
+            config["ref"]["release"],
+            "gtf",
+            wc.species
+        ),
         file_ext="{0}.gtf.gz".format(config["ref"]["release"]),
     cache: True
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 > files.txt; "
-        "curl -o {output.gtf}.gz {params.curl} {params.base_url}/""$(grep '{params.file_ext}$' files.txt)""; "
+        "curl -o {output.gtf}.gz {params.curl} {params.base_url}/" "$(grep '{params.file_ext}$' files.txt)" "; "
         "gunzip {output.gtf}.gz"
         ") &> {log}"
 
@@ -72,11 +72,11 @@ rule download_vcf_annotation:
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-                config["ref"]["release"],
-                "variation/vcf",
-                wc.species,
-                "{0}_{1}".format(wc.species, wc.vcf_type)
-            ),
+            config["ref"]["release"],
+            "variation/vcf",
+            wc.species,
+            "{0}_{1}".format(wc.species, wc.vcf_type)
+        ),
     cache: True
     wildcard_constraints:
         species="homo_sapiens",
