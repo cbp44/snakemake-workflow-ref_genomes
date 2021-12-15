@@ -32,7 +32,7 @@ ARG SNAKEMAKE_VERSION
 ENV SNAKEMAKE_VERSION=${SNAKEMAKE_VERSION:-6.12.3}
 
 RUN set -eux; \
-  mamba create -q -y \
+  mamba create -y \
     -c conda-forge -c bioconda \
     -n snakemake \
     bioconda::snakemake-minimal=="${SNAKEMAKE_VERSION}" \
@@ -46,21 +46,20 @@ RUN set -eux; \
   echo "export SNAKEMAKE_CONDA_PREFIX=$SNAKEMAKE_CONDA_PREFIX" >> ~/.bashrc
 
 ENV PATH=/opt/conda/envs/snakemake/bin:$PATH
-
-
-
 #################### /snakemake ####################
 
+# #################### copier ####################
 FROM snakemake AS copier
 
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --no-install-recommends --no-install-suggests libc6-dev gcc; \
-  pip install --no-cache-dir copier; \
+  pip install --no-cache-dir copier==5.1.0; \
   apt-get purge -y libc6-dev gcc; \
   apt autoremove -y; \
   apt-get clean all; \
   rm -rf /var/lib/apt/lists/* /usr/share/doc/* /usr/share/man/* /opt/conda/man/*
+# #################### /copier ####################
 
 # #################### envs ####################
 # FROM snakemake AS envs
