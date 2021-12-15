@@ -5,17 +5,12 @@ rule download_genome_fasta:
         "../envs/curl.yaml"
     log:
         "logs/download-{species}-genome.log",
-    shadow:
-        "shallow"
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-                config["ref"]["release"],
-                "fasta",
-                wc.species,
-                "dna_index"
+                config["ref"]["release"], "fasta", wc.species, "dna_index"
             ),
         file_ext=".fa.gz",
     cache: True
@@ -24,7 +19,8 @@ rule download_genome_fasta:
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 > files.txt; "
         "curl -o {output.fasta}.gz {params.curl} {params.base_url}/" "$(grep '{params.file_ext}$' files.txt)" "; "
-        "gunzip {output.fasta}.gz"
+        "gunzip {output.fasta}.gz; "
+        "rm -f files.txt"
         ") &> {log}"
 
 
@@ -35,16 +31,12 @@ rule download_gene_annotation:
         "../envs/curl.yaml"
     log:
         "logs/download-{species}-annotation.log",
-    shadow:
-        "shallow"
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-            config["ref"]["release"],
-            "gtf",
-            wc.species
+            config["ref"]["release"], "gtf", wc.species
         ),
         file_ext="{0}.gtf.gz".format(config["ref"]["release"]),
     cache: True
@@ -53,7 +45,8 @@ rule download_gene_annotation:
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 > files.txt; "
         "curl -o {output.gtf}.gz {params.curl} {params.base_url}/" "$(grep '{params.file_ext}$' files.txt)" "; "
-        "gunzip {output.gtf}.gz"
+        "gunzip {output.gtf}.gz; "
+        "rm -f files.txt"
         ") &> {log}"
 
 
@@ -65,8 +58,6 @@ rule download_vcf_annotation:
         "../envs/curl.yaml"
     log:
         "logs/download-{species}-vcf-{vcf_type}.log",
-    shadow:
-        "shallow"
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
@@ -74,8 +65,8 @@ rule download_vcf_annotation:
         base_url=lambda wc: get_ensembl_base_url(
             config["ref"]["release"],
             "variation/vcf",
-            wc.species,
-            "{0}_{1}".format(wc.species, wc.vcf_type)
+            wc.species, 
+            "{0}_{1}".format(wc.species, wc.vcf_type),
         ),
     cache: True
     wildcard_constraints:
