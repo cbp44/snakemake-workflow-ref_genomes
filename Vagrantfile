@@ -9,18 +9,6 @@ Vagrant.configure("2") do |config|
     # For a complete reference, please see the online documentation at
     # https://docs.vagrantup.com.
 
-    # Create a forwarded port mapping which allows access to a specific port
-    # within the machine from a port on the host machine. In the example below,
-    # accessing "localhost:8080" will access port 80 on the guest machine.
-    # NOTE: This will enable public access to the opened port
-    # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-    # Create a forwarded port mapping which allows access to a specific port
-    # within the machine from a port on the host machine and only allow access
-    # via 127.0.0.1 to disable public access
-    # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-
-
     config.vm.define :devbox do |devbox|
         devbox.vm.box = "debian/bullseye64"
         devbox.vm.box_version = "11.20211018.1"
@@ -28,10 +16,9 @@ Vagrant.configure("2") do |config|
         # Disable automatic box update checking. If you disable this, then
         # boxes will only be checked for updates when the user runs
         # `vagrant box outdated`. This is not recommended.
-        devbox.vm.box_check_update = false
+        devbox.vm.box_check_update = true
         
         devbox.vm.synced_folder "./", "/vagrant"
-        # devbox.vm.synced_folder "./", "/vagrant", type: '9p', disabled: false, accessmode: "mapped", owner: "vagrant", mount: true
 
         devbox.vm.network :private_network,
             :type => "dhcp",
