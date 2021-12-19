@@ -20,6 +20,7 @@ rule all:
         "resources/{0}/star_genome".format(config["ref"]["species"]),
 
 
-include: "rules/download.smk"
+include: "rules/common.smk"
+include: "rules/download_reference.smk"
 include: "rules/ensembl_releases.smk"
 include: "rules/mapping_index.smk"

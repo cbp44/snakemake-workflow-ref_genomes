@@ -54,5 +54,5 @@ ensembl_release:
   help: "Enter the Ensembl release number to use for the [[ species|capitalize|replace('_',' ') ]] reference genome"
   default: 105
   choices:
-    - 104
     - 105
+    - 104

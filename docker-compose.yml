@@ -2,6 +2,7 @@ version: '3.7'
 
 volumes:
   snakemake-cache:
+    external: true
   conda-envs:
 
 services:
