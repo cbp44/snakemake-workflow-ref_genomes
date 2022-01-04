@@ -1,19 +1,16 @@
 rule download_genome_fasta:
     output:
-        fasta="resources/{species}/genome.fa",
+        fasta="resources/ensembl/genome.fa",
     conda:
         "../envs/curl.yaml"
     log:
-        "logs/download-{species}-genome.log",
+        "logs/ensembl/download-genome.log",
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
-        base_url=lambda wc: get_ensembl_base_url(
-            config["ref"]["release"], "fasta", wc.species, "dna_index"
-        ),
+        base_url=lambda wc: get_ensembl_base_url("fasta", "dna_index"),
         file_ext=".fa.gz",
-    cache: True
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -26,20 +23,17 @@ rule download_genome_fasta:
 
 rule download_gene_annotation:
     output:
-        gtf="resources/{species}/genome.gtf",
+        gtf="resources/ensembl/genome.gtf",
     conda:
         "../envs/curl.yaml"
     log:
-        "logs/download-{species}-annotation.log",
+        "logs/ensembl/download-annotation.log",
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
-        base_url=lambda wc: get_ensembl_base_url(
-            config["ref"]["release"], "gtf", wc.species
-        ),
-        file_ext="{0}.gtf.gz".format(config["ref"]["release"]),
-    cache: True
+        base_url=lambda wc: get_ensembl_base_url("gtf"),
+        file_ext="{0}.gtf.gz".format(config["ref"]["ensembl_release"]),
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -52,23 +46,20 @@ rule download_gene_annotation:
 
 rule download_vcf_annotation:
     output:
-        vcf="resources/{species}/{vcf_type}.vcf.gz",
-        csi="resources/{species}/{vcf_type}.vcf.gz.csi",
+        vcf="resources/ensembl/{vcf_type}.vcf.gz",
+        csi="resources/ensembl/{vcf_type}.vcf.gz.csi",
     conda:
         "../envs/curl.yaml"
     log:
-        "logs/download-{species}-vcf-{vcf_type}.log",
+        "logs/ensembl/download-vcf-{vcf_type}.log",
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url(
-            config["ref"]["release"],
             "variation/vcf",
-            wc.species,
             "{0}_{1}".format(wc.species, wc.vcf_type),
         ),
-    cache: True
     wildcard_constraints:
         species="homo_sapiens",
         vcf_type="|".join(

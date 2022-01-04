@@ -6,18 +6,14 @@ min_version("5.0")
 configfile: "config/config.yaml"
 
 
-container: "docker://continuumio/miniconda3:4.10.3"
-
-
 rule all:
     input:
-        multiext(
-            "resources/{0}/genome".format(config["ref"]["species"]),
+        multiext("resources/ensembl/genome",
             ".fa",
             ".fa.fai",
             ".gtf",
         ),
-        "resources/{0}/star_genome".format(config["ref"]["species"]),
+        "resources/ensembl/star_genome",
 
 
 include: "rules/common.smk"

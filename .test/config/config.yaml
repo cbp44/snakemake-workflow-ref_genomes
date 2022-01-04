@@ -12,4 +12,4 @@ ref:
   # Ensembl species name
   species: caenorhabditis_elegans
   # Ensembl release
-  release: 105
+  ensembl_release: 105

@@ -11,13 +11,10 @@ _exclude:
   - "_STARtmp"
   - "resources"
   - "results"
-  - ".dockerignore"
   - ".editorconfig"
   - ".gitattributes"
   - ".gitignore"
   - "copier.yml"
-  - "docker-compose.yml"
-  - "Dockerfile"
   - "Vagrantfile"
 
 # QUESTIONS FOR USER -------------------------
