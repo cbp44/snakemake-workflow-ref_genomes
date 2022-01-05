@@ -1,0 +1,41 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: Snakemake configuration file for a reference genome workflow
+
+type: object
+
+properties:
+  # Path to csv file of organisms supported in the workflow
+  # This file is parsed and added to the config insdie the workflow
+  supported_organisms:
+    title: Supported organisms
+    description: List of supported Ensembl reference genome organisms
+    type: array
+
+  ref:
+    title: Reference genome object
+    description: Object with information about the Ensembl reference genome
+    type: object
+
+    properties:
+      species:
+        title: Reference genome species
+        description: The species to get the Ensembl reference genome for
+        examples:
+          - homo_sapiens
+          - mus_musculus
+        type: string
+      ensembl_release:
+        title: Ensembl release number
+        description: The Ensembl release number to use when downloading the reference genome data
+        examples:
+          - 104
+          - 105
+        type: integer
+
+    required:
+      - species
+      - ensembl_release
+
+required:
+  - ref

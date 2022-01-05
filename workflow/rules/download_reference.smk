@@ -11,6 +11,8 @@ rule download_genome_fasta:
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url("fasta", "dna_index"),
         file_ext=".fa.gz",
+    shadow:
+        "shallow"
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -34,6 +36,8 @@ rule download_gene_annotation:
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_base_url("gtf"),
         file_ext="{0}.gtf.gz".format(config["ref"]["ensembl_release"]),
+    shadow:
+        "shallow"
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -71,6 +75,8 @@ rule download_vcf_annotation:
                 "structural_variations",
             ]
         ),
+    shadow:
+        "shallow"
     shell:
         "("
         "   curl -o {output.vcf} {params.curl} {params.base_url}.vcf.gz; "

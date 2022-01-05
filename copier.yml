@@ -1,8 +1,12 @@
 # CONFIGURATION -------------------------
 _templates_suffix: .jinja
 _exclude:
-  - ".docker"
+  - "~*"
+  - "*.py[co]"
+  - "__pycache__"
   - ".git"
+  - ".DS_Store"
+  - ".svn"
   - ".github"
   - ".test"
   - ".vagrant"
@@ -16,6 +20,7 @@ _exclude:
   - ".gitignore"
   - "copier.yml"
   - "Vagrantfile"
+  - "vagrant-init.sh"
 
 # QUESTIONS FOR USER -------------------------
 species:

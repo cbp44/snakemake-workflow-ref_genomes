@@ -1,4 +1,4 @@
-from snakemake.utils import min_version
+from snakemake.utils import min_version, validate
 
 min_version("5.0")
 
@@ -6,9 +6,13 @@ min_version("5.0")
 configfile: "config/config.yaml"
 
 
+validate(config, "schemas/config.schema.yaml")
+
+
 rule all:
     input:
-        multiext("resources/ensembl/genome",
+        multiext(
+            "resources/ensembl/genome",
             ".fa",
             ".fa.fai",
             ".gtf",

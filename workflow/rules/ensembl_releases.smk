@@ -5,6 +5,8 @@ rule get_ensembl_genome_list:
         "logs/ensembl/release-{release}/get_genome_list.txt",
     conda:
         "../envs/curl.yaml"
+    shadow:
+        "shallow"
     shell:
         "(curl -o {output} http://ftp.ensembl.org/pub/release-{wildcards.release}/species_EnsemblVertebrates.txt) &> {log}"
 
@@ -20,5 +22,7 @@ rule extract_supported_genomes:
         "../envs/awk.yaml"
     log:
         "logs/ensembl/release-{release}/extract_supported_genomes.txt",
+    shadow:
+        "shallow"
     shell:
         "((head -n 1 {input} | sed 's/^#//'; grep -E {params.supported_genomes:q} {input}) | cut -f  > {output}) &> {log}"

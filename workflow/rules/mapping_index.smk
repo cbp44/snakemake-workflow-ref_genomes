@@ -1,3 +1,6 @@
+import os.path
+
+
 rule genome_faidx:
     input:
         "resources/ensembl/genome.fa",
@@ -10,6 +13,8 @@ rule genome_faidx:
 
 
 ## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
+# genomeChrBinNbits == min(18,log2[max(GenomeLength/NumberOfReferences,ReadLength)])
+# genomeSAindexNbases == min(14, log2(GenomeLength)/2 - 1)
 rule star_index:
     input:
         fasta="resources/ensembl/genome.fa",
@@ -19,15 +24,18 @@ rule star_index:
         directory("resources/ensembl/star_genome"),
     conda:
         "../envs/star.yaml"
-    threads: 1
     params:
-        extra=lambda wc, input: "--sjdbGTFfile {0} --genomeSAindexNbases 12".format(
-            input.annotation
-        ),
         sjdbOverhang="99",  # Sequencing read lenegth - 1
-        fasta=lambda wc, input: "--genomeFastaFiles {0}".format(input.fasta),
-        gtf=lambda wc, input: "{0}".format(input.annotation),
+        genomeSAindexNbases="12",  # Calculated from genome size, see STAR docs
+        outTmpDir=lambda wc, output: os.path.join(output[0], "_STARtmp"),
     log:
         "logs/ensembl/star_index.log",
+    threads: 24
     shell:
-        "STAR --runMode genomeGenerate {params.extra} --runThreadN {threads} --genomeDir {output} {params.fasta} --sjdbOverhang {params.sjdbOverhang} {params.gtf} &> {log}"
+        "mkdir -p {output}; "
+        "STAR --runThreadN {threads} --runMode genomeGenerate"
+        " --outTmpDir {params.outTmpDir} --genomeDir {output}"
+        " --genomeSAindexNbases {params.genomeSAindexNbases}"
+        " --genomeFastaFiles {input.fasta}"
+        " --sjdbOverhang {params.sjdbOverhang}"
+        " --sjdbGTFfile {input.annotation} {input.annotation} &> {log}"
