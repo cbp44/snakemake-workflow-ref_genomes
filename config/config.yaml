@@ -11,6 +11,3 @@ supported_species:
 ref:
   # Ensembl species name
   species: caenorhabditis_elegans
-  # Ensembl release
-  ensembl_release: 105
-  

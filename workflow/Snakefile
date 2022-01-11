@@ -1,6 +1,6 @@
 from snakemake.utils import min_version, validate
 
-min_version("5.0")
+min_version("6.0")
 
 
 configfile: "config/config.yaml"
@@ -13,9 +13,8 @@ rule all:
     input:
         multiext(
             "resources/ensembl/genome",
-            ".fa",
-            ".fa.fai",
-            ".gtf",
+            ".fa.gz",
+            ".gtf.gz",
         ),
         "resources/ensembl/star_genome",
 

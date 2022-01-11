@@ -25,17 +25,9 @@ properties:
           - homo_sapiens
           - mus_musculus
         type: string
-      ensembl_release:
-        title: Ensembl release number
-        description: The Ensembl release number to use when downloading the reference genome data
-        examples:
-          - 104
-          - 105
-        type: integer
 
     required:
       - species
-      - ensembl_release
 
 required:
   - ref

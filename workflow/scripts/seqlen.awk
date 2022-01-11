@@ -8,5 +8,6 @@
     seqlen += length($0)
 }
 END{
+    OFMT="%.0f"
     print seqtotal+seqlen
 }
