@@ -5,13 +5,6 @@ description: Snakemake configuration file for a reference genome workflow
 type: object
 
 properties:
-  # Path to csv file of organisms supported in the workflow
-  # This file is parsed and added to the config insdie the workflow
-  supported_species:
-    title: Supported organisms
-    description: List of supported Ensembl reference genome organisms
-    type: array
-
   ref:
     title: Reference genome object
     description: Object with information about the Ensembl reference genome

@@ -28,9 +28,6 @@ rule calc_star_param:
                 )
 
 
-## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
-# genomeChrBinNbits == min(18,log2[max(GenomeLength/NumberOfReferences,ReadLength)])
-# genomeSAindexNbases == min(14, log2(GenomeLength)/2 - 1)
 rule star_index:
     input:
         fasta="resources/ensembl/genome.fa.gz",
@@ -44,8 +41,6 @@ rule star_index:
         "logs/ensembl/star_index.log",
     params:
         sjdbOverhang="99",  # Sequencing read lenegth - 1
-        # genomeSAindexNbases="12",  # Calculated from genome size, see STAR docs
-        # genomeSAindexNbases=lambda wc: workflow.source_path("resources/ensembl/genome.star_param.genomeSAindexNbases"),
         outTmpDir=lambda wc, output: os.path.join(output[0], "_STARtmp"),
         gtf=lambda wc, input: input.annotation.replace(".gtf.gz", ".gtf"),
         fasta=lambda wc, input: input.fasta.replace(".fa.gz", ".fa"),

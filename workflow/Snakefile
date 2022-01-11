@@ -9,17 +9,32 @@ configfile: "config/config.yaml"
 validate(config, "schemas/config.schema.yaml")
 
 
-rule all:
-    input:
+def get_all_inputs():
+    input_list = []
+
+    input_list.extend(
         multiext(
             "resources/ensembl/genome",
             ".fa.gz",
             ".gtf.gz",
-        ),
-        "resources/ensembl/star_genome",
+        )
+    )
+
+    input_list.append("resources/ensembl/star_genome")
+
+    if config["ref"]["species"] == "homo_sapiens":
+        input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/phenotype_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/1000genomes_variants.vcf.gz")
+
+    return input_list
+
+
+rule all:
+    input:
+        get_all_inputs(),
 
 
 include: "rules/common.smk"
 include: "rules/download_reference.smk"
-include: "rules/ensembl_releases.smk"
 include: "rules/mapping_index.smk"
