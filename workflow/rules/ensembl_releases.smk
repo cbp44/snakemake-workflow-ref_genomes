@@ -1,3 +1,5 @@
+
+
 rule get_ensembl_genome_list:
     output:
         "results/ensembl/release-{release}/available_genomes.txt",
@@ -11,18 +13,18 @@ rule get_ensembl_genome_list:
         "(curl -o {output} http://ftp.ensembl.org/pub/release-{wildcards.release}/species_EnsemblVertebrates.txt) &> {log}"
 
 
-rule extract_supported_genomes:
+rule extract_supported_species:
     input:
         "results/ensembl/release-{release}/available_genomes.txt",
     output:
         "results/ensembl/release-{release}/supported_genomes.txt",
     params:
-        supported_genomes="|".join(config.get("supported_organisms", ["mus_musculus"])),
+        supported_species="|".join(config.get("supported_species", ["mus_musculus"])),
     conda:
         "../envs/awk.yaml"
     log:
-        "logs/ensembl/release-{release}/extract_supported_genomes.txt",
+        "logs/ensembl/release-{release}/extract_supported_species.txt",
     shadow:
         "shallow"
     shell:
-        "((head -n 1 {input} | sed 's/^#//'; grep -E {params.supported_genomes:q} {input}) | cut -f  > {output}) &> {log}"
+        "((head -n 1 {input} | sed 's/^#//'; grep -E {params.supported_species:q} {input}) | cut -f  > {output}) &> {log}"
