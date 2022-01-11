@@ -1,9 +1,10 @@
 rule download_genome_metadata:
     output:
-        json="resources/ensembl/genome_metadata.json",
+        json="resources/ensembl/{metadata_type}.json",
     params:
-        species=config["ref"]["species"],
-        get_genome_info=True,
+        extra=lambda wc, output: "--species {0} {2} --output {1}".format(config["ref"]["species"], output.json, wc.metadata_type),
+    wildcard_constraints:
+        metadata_type="|".join(["genome_info","variation_consequences"])
     shadow:
         "shallow"
     script:
