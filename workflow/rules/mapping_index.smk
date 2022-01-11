@@ -45,8 +45,6 @@ rule star_index:
         gtf=lambda wc, input: input.annotation.replace(".gtf.gz", ".gtf"),
         fasta=lambda wc, input: input.fasta.replace(".fa.gz", ".fa"),
     threads: 24
-    shadow:
-        "copy-minimal"
     shell:
         "(mkdir -p {output}; "
         "gunzip --keep {input.fasta}; "
