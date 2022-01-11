@@ -49,12 +49,3 @@ species:
     # "Mouse NZO/HlLtJ": "mus_musculus_nzohlltj"
     # "Mouse PWK/PhJ": "mus_musculus_pwkphj"
     # "Mouse WSB/EiJ": "mus_musculus_wsbeij"
-
-
-ensembl_release:
-  type: int
-  help: "Enter the Ensembl release number to use for the [[ species|capitalize|replace('_',' ') ]] reference genome"
-  default: 105
-  choices:
-    - 105
-    - 104

@@ -20,6 +20,7 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_SNAKEMAKE_SNAKEFMT: true
+
   Linting:
     runs-on: ubuntu-latest
     steps:
@@ -35,9 +36,9 @@ jobs:
 
   Testing:
     runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
+    # needs:
+    #   - Linting
+    #   - Formatting
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

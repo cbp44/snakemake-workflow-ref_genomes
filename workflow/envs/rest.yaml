@@ -1,0 +1,10 @@
+name: rest
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ca-certificates
+  - curl
+  - urllib3
+  - python>3.9
+  

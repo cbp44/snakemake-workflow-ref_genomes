@@ -1,41 +1,59 @@
 import os.path
+from math import log2
 
 
-rule genome_faidx:
+rule get_genome_length:
     input:
-        "resources/ensembl/genome.fa",
+        fasta="resources/ensembl/genome.fa.gz",
     output:
-        "resources/ensembl/genome.fa.fai",
-    log:
-        "logs/ensembl/genome_faidx.log",
-    wrapper:
-        "0.80.2/bio/samtools/faidx"
+        temp("resources/ensembl/genome.fa.seqlen"),
+    params:
+        awk=workflow.source_path("../scripts/seqlen.awk"),
+    conda:
+        "../envs/awk.yaml"
+    shell:
+        "awk -f {params.awk} <(zcat {input.fasta}) > {output}"
 
 
-## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
-# genomeChrBinNbits == min(18,log2[max(GenomeLength/NumberOfReferences,ReadLength)])
-# genomeSAindexNbases == min(14, log2(GenomeLength)/2 - 1)
+rule calc_star_param:
+    input:
+        "resources/ensembl/genome.fa.seqlen",
+    output:
+        temp("resources/ensembl/genome.star_param.genomeSAindexNbases"),
+    run:
+        with open(input[0]) as fin:
+            with open(output[0], "w") as fout:
+                fout.write(
+                    "{}".format(round(min(14, (log2(int(fin.readline())) / 2) - 1)))
+                )
+
+
 rule star_index:
     input:
-        fasta="resources/ensembl/genome.fa",
-        fai="resources/ensembl/genome.fa.fai",
-        annotation="resources/ensembl/genome.gtf",
+        fasta="resources/ensembl/genome.fa.gz",
+        annotation="resources/ensembl/genome.gtf.gz",
+        genomeSAindexNbases="resources/ensembl/genome.star_param.genomeSAindexNbases",
     output:
         directory("resources/ensembl/star_genome"),
     conda:
         "../envs/star.yaml"
-    params:
-        sjdbOverhang="99",  # Sequencing read lenegth - 1
-        genomeSAindexNbases="12",  # Calculated from genome size, see STAR docs
-        outTmpDir=lambda wc, output: os.path.join(output[0], "_STARtmp"),
     log:
         "logs/ensembl/star_index.log",
+    params:
+        sjdbOverhang="99",  # Sequencing read lenegth - 1
+        outTmpDir=lambda wc, output: os.path.join(output[0], "_STARtmp"),
+        gtf=lambda wc, input: input.annotation.replace(".gtf.gz", ".gtf"),
+        fasta=lambda wc, input: input.fasta.replace(".fa.gz", ".fa"),
     threads: 24
     shell:
-        "mkdir -p {output}; "
+        "(mkdir -p {output}; "
+        "gunzip --keep {input.fasta}; "
+        "gunzip --keep {input.annotation}; "
         "STAR --runThreadN {threads} --runMode genomeGenerate"
         " --outTmpDir {params.outTmpDir} --genomeDir {output}"
-        " --genomeSAindexNbases {params.genomeSAindexNbases}"
-        " --genomeFastaFiles {input.fasta}"
+        " --genomeSAindexNbases $(cat {input.genomeSAindexNbases})"
+        " --genomeFastaFiles {params.fasta}"
         " --sjdbOverhang {params.sjdbOverhang}"
-        " --sjdbGTFfile {input.annotation} {input.annotation} &> {log}"
+        " --sjdbGTFfile {params.gtf}; "
+        "rm -rf {params.fasta} {params.gtf} {params.outTmpDir}"
+        ") &> {log}"

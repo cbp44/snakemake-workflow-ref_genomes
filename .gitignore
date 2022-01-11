@@ -2,6 +2,8 @@ results/
 results/**
 resources/
 resources/**
+logs/
+logs/**
 .snakemake
 .snakemake/**
 .vagrant/

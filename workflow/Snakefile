@@ -1,6 +1,6 @@
 from snakemake.utils import min_version, validate
 
-min_version("5.0")
+min_version("6.0")
 
 
 configfile: "config/config.yaml"
@@ -9,18 +9,35 @@ configfile: "config/config.yaml"
 validate(config, "schemas/config.schema.yaml")
 
 
-rule all:
-    input:
+def get_all_inputs():
+    input_list = []
+
+    input_list.extend(
         multiext(
             "resources/ensembl/genome",
-            ".fa",
-            ".fa.fai",
-            ".gtf",
-        ),
-        "resources/ensembl/star_genome",
+            ".fa.gz",
+            ".gtf.gz",
+        )
+    )
+
+    input_list.append("resources/ensembl/star_genome")
+
+    input_list.append("resources/ensembl/genome_info.json")
+
+    if config["ref"]["species"] == "homo_sapiens":
+        input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/phenotype_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/1000genomes_variants.vcf.gz")
+        input_list.append("resources/ensembl/variation_consequences.json")
+
+    return input_list
+
+
+rule all:
+    input:
+        get_all_inputs(),
 
 
 include: "rules/common.smk"
 include: "rules/download_reference.smk"
-include: "rules/ensembl_releases.smk"
 include: "rules/mapping_index.smk"

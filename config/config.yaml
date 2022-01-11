@@ -1,16 +1,4 @@
-
-supported_species:
-  - caenorhabditis_elegans
-  - danio_rerio
-  - drosophila_melanogaster
-  - homo_sapiens
-  - microcebus_murinus
-  - mus_musculus
-  - saccharomyces_cerevisiae
-
 ref:
   # Ensembl species name
-  species: caenorhabditis_elegans
-  # Ensembl release
-  ensembl_release: 105
-  
+  # species: caenorhabditis_elegans
+  species: homo_sapiens
