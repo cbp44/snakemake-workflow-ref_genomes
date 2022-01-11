@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "**/.snakemake": true,
+        "**/.vagrant": true
+    },
+    "files.watcherExclude": {
+        "**/.snakemake/*/**": true,
+        "**/.vagrant/*/**": true
+    }
+}
