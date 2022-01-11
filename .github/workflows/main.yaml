@@ -20,9 +20,25 @@ jobs:
           snakefile: workflow/Snakefile
           args: "--use-conda --show-failed-logs --cores all --conda-cleanup-pkgs cache --all-temp"
 
-      - name: Test report
-        uses: snakemake/snakemake-github-action@v1.24.0
+      - name: Upload workflow logs
+        uses: actions/upload-artifact@v2
         with:
-          directory: .test
-          snakefile: workflow/Snakefile
-          args: "--report report.zip"
+          name: workflow-logs
+          path: |
+            logs/
+            .snakemake/logs/
+
+      # - name: Upload workflow results
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: workflow-results
+      #     path: |
+      #       results/
+      #       resources/
+
+      # - name: Test report
+      #   uses: snakemake/snakemake-github-action@v1.24.0
+      #   with:
+      #     directory: .test
+      #     snakefile: workflow/Snakefile
+      #     args: "--report report.zip"
