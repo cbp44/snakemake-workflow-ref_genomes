@@ -3,6 +3,8 @@ rule download_genome_metadata:
         json="resources/ensembl/{metadata_type}.json",
     params:
         extra=lambda wc, output: "--species {0} {2} --output {1}".format(config["ref"]["species"], output.json, wc.metadata_type),
+    conda:
+        "../envs/rest.yaml"
     wildcard_constraints:
         metadata_type="|".join(["genome_info","variation_consequences"])
     shadow:
