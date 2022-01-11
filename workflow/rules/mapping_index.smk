@@ -21,9 +21,11 @@ rule calc_star_param:
     output:
         temp("resources/ensembl/genome.star_param.genomeSAindexNbases"),
     run:
-        with open(input[0]) as f:
-            with open(output[0], "w") as f:
-                f.write("{}".format(round(min(14, (log2(int(f.readline())) / 2) - 1))))
+        with open(input[0]) as fin:
+            with open(output[0], "w") as fout:
+                fout.write(
+                    "{}".format(round(min(14, (log2(int(fin.readline())) / 2) - 1)))
+                )
 
 
 ## TODO: Dynamically adjust genomeSAindexNbases parameter based on size of genome.
