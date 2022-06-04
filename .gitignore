@@ -9,3 +9,4 @@ logs/**
 .vagrant
 .vagrant/**
 Log.out
+.test/tmp
