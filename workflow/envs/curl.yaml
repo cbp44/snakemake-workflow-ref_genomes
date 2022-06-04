@@ -6,4 +6,3 @@ dependencies:
   - ca-certificates
   - curl
   - gzip
-  
