@@ -9,6 +9,7 @@ rule download_genome_metadata:
         metadata_type="|".join(["genome_info","variation_consequences"])
     shadow:
         "shallow"
+    cache: True
     script:
         "../scripts/ensembl_rest_api.py"
 
@@ -64,6 +65,7 @@ rule download_genome_fasta:
         base_url=lambda wc: get_ensembl_base_url("fasta", "dna"),
     shadow:
         "shallow"
+    cache: True
     shell:
         "("
         "files=$(cat {input}); "
@@ -88,6 +90,7 @@ rule download_gene_annotation:
         ),
     shadow:
         "shallow"
+    cache: True
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -99,8 +102,9 @@ rule download_gene_annotation:
 
 rule download_vcf_annotation:
     output:
-        vcf="resources/ensembl/{vcf_type}_variants.vcf.gz",
-        csi="resources/ensembl/{vcf_type}_variants.vcf.gz.csi",
+        multiext("resources/ensembl/{vcf_type}_variants", ".vcf.gz", ".vcf.gz.csi")
+        # vcf="resources/ensembl/{vcf_type}_variants.vcf.gz",
+        # csi="resources/ensembl/{vcf_type}_variants.vcf.gz.csi",
     conda:
         "../envs/curl.yaml"
     log:
@@ -123,8 +127,9 @@ rule download_vcf_annotation:
         ),
     shadow:
         "shallow"
+    cache: True
     shell:
         "("
-        "   curl -o {output.vcf} {params.curl} {params.base_url}{params.server_filename}.vcf.gz; "
-        "   curl -o {output.csi} {params.curl} {params.base_url}{params.server_filename}.vcf.gz.csi"
+        "   curl -o {output[0]} {params.curl} {params.base_url}{params.server_filename}.vcf.gz; "
+        "   curl -o {output[1]} {params.curl} {params.base_url}{params.server_filename}.vcf.gz.csi"
         ") &> {log}"

@@ -8,3 +8,13 @@ def get_ensembl_base_url(filetype, postfix=""):
     # base_url += postfix
 
     return base_url
+
+
+def read_file_line(filename):
+    """Return the the first line of a file stripped of newlines.
+
+    Args:
+        filename (str): the path to the file
+    """
+    with open(filename) as f:
+        return f.readline().strip()

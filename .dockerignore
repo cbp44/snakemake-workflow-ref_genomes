@@ -1,0 +1,7 @@
+*
+!/.test
+!/.docker
+!/config
+!/workflow
+!copier.yml
+!*.jinja

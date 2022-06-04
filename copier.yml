@@ -1,27 +1,16 @@
+_min_copier_version: "6.0.0"
+
 # CONFIGURATION -------------------------
-_templates_suffix: .jinja
 _exclude:
-  - "~*"
-  - "*.py[co]"
-  - ".DS_Store"
-  - ".editorconfig"
-  - ".git"
-  - ".gitattributes"
-  - ".github"
-  - ".gitignore"
-  - ".snakemake"
-  - ".svn"
-  - ".test"
-  - ".vagrant"
-  - ".vscode"
-  - "copier.yml"
-  - "logs"
-  - "resources"
-  - "results"
-  - "vagrant-init.sh"
-  - "Vagrantfile"
-
-
+  - "*"
+  - "!config"
+  - "!config/**"
+  - "!workflow"
+  - "!workflow/**"
+  - "!.dockerignore"
+  - "!Dockerfile"
+  - "!README.md"
+  
 # QUESTIONS FOR USER -------------------------
 species:
   type: str
