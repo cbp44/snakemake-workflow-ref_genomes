@@ -9,9 +9,7 @@ on:
 jobs:
   Testing:
     runs-on: ubuntu-latest
-    needs:
-      - Linting
-      - Formatting
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
