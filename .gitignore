@@ -6,5 +6,6 @@ logs/
 logs/**
 .snakemake
 .snakemake/**
-.vagrant/
+.vagrant
 .vagrant/**
+Log.out
