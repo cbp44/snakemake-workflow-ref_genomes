@@ -1,8 +1,8 @@
 name: Linting
 
 on:
-  push:
-    branches: [ github-actions ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   Linting:
