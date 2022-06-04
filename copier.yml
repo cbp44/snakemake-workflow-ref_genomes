@@ -11,6 +11,9 @@ _exclude:
   - "!Dockerfile"
   - "!README.md"
   
+_tasks:
+  - "mkdir resources"
+  
 # QUESTIONS FOR USER -------------------------
 species:
   type: str
