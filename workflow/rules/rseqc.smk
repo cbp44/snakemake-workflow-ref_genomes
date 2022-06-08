@@ -1,6 +1,6 @@
 rule RSeQC_Create_DB:
     input:
-        get_gtf_annotation_file()
+        "resources/ensembl/genome.gtf.gz"
     output:
         "results/qc/rseqc/annotation.db"
     log:

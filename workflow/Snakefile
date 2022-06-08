@@ -40,3 +40,4 @@ rule all:
 include: "rules/common.smk"
 include: "rules/download_reference.smk"
 include: "rules/mapping_index.smk"
+include: "rules/rseqc.smk"

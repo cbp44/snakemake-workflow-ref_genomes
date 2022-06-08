@@ -32,7 +32,7 @@ rule Determine_FASTA_File:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
-        base_url=lambda wc: get_ensembl_base_url("fasta", "dna"),
+        base_url=lambda wc: get_ensembl_url("fasta", "dna"),
         file_ext="-e 'dna.primary_assembly.fa.gz$' -e 'dna.toplevel.fa.gz$'",
     shadow:
         "shallow"
@@ -65,7 +65,7 @@ rule Download_Genome_FASTA:
         # --insecure used because https fails cert validation
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
-        base_url=lambda wc: get_ensembl_base_url("fasta", "dna"),
+        base_url=lambda wc: get_ensembl_url("fasta", "dna"),
     # shadow:
     #     "shallow"
     cache: True
@@ -120,12 +120,12 @@ rule Download_VCF_Annotation:
         # and http times out for larger files
         # curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
         curl="--show-error --silent --fail-with-body",
-        # base_url=get_ensembl_url("variation/vcf"),
-        vcf_url=lambda wc: get_ensembl_url("variation/vcf", 
-            f"{config["ref"]["species"]}_{wc.vcf_type}.vcf.gz"),
-        csi_url+lambda wc: get_ensembl_url("variation/vcf", 
-            f"{config["ref"]["species"]}_{wc.vcf_type}.vcf.gz.csi"),
-        server_filename=lambda wc: f"{config["ref"]["species"]}_{wc.vcf_type}"
+        base_url=get_ensembl_url("variation/vcf"),
+        # vcf_url=lambda wc: get_ensembl_url("variation/vcf", f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz"),
+        vcf_url=lambda wc: f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz",
+        csi_url=lambda wc: f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz.csi",
+        # csi_url+lambda wc: get_ensembl_url("variation/vcf", f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz.csi"),
+        # server_filename=lambda wc: f"{config['ref']['species']}_{wc.vcf_type}",
     wildcard_constraints:
         vcf_type="|".join(
             [
@@ -137,6 +137,6 @@ rule Download_VCF_Annotation:
     retries: 3
     shell:
         """
-        (curl -o {output[0]} {params.curl} {params.vcf_url} \
-         && curl -o {output[1]} {params.curl} {params.csi_url}) &> {log}
+        (curl -o {output[0]} {params.curl} {params.base_url}/{params.vcf_url} \
+         && curl -o {output[1]} {params.curl} {params.base_url}/{params.csi_url}) &> {log}
         """
