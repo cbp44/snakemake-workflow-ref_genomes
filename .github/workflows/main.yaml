@@ -17,11 +17,11 @@ jobs:
         with:
           directory: .test
           snakefile: workflow/Snakefile
-          args: "--use-conda --show-failed-logs --cores all --conda-cleanup-pkgs cache --all-temp --configfile .test/config/config.yaml"
+          args: "--use-conda --show-failed-logs --cores all --conda-cleanup-pkgs cache --all-temp --configfile .test/integration/caenorhabditis_elegans/config.yaml"
 
       - name: Test report
         uses: snakemake/snakemake-github-action@v1.24.0
         with:
           directory: .test
           snakefile: workflow/Snakefile
-          args: "--report report.zip --configfile .test/config/config.yaml"
+          args: "--report report.zip --configfile .test/integration/caenorhabditis_elegans/config.yaml"

@@ -18,3 +18,30 @@ def read_file_line(filename):
     """
     with open(filename) as f:
         return f.readline().strip()
+
+
+def get_all_inputs():
+    input_list = []
+
+    input_list.extend(
+        multiext(
+            "resources/ensembl/genome",
+            ".fa.gz",
+            ".gtf.gz",
+        )
+    )
+
+    input_list.append("resources/ensembl/star_genome")
+
+    input_list.append("resources/ensembl/genome_info.json")
+
+    input_list.append("resources/ensembl/gffutils.db")
+    input_list.append("resources/ensembl/transcript_annotation.bed")
+
+    if config["ref"]["species"] == "homo_sapiens":
+        input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/cds_regions.tsv")
+        # input_list.append("resources/ensembl/phenotype_associated_variants.vcf.gz")
+        # input_list.append("resources/ensembl/variation_consequences.json")
+
+    return input_list

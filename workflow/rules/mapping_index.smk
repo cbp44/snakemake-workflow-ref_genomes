@@ -9,7 +9,7 @@ rule Get_Genome_Length:
     output:
         ensure(temp("resources/ensembl/genome.fa.seqlen"), non_empty=True),
     params:
-        awk=workflow.source_path("../scripts/seqlen.awk"),
+        awk=workflow.source_path("../scripts/sequence_length.awk"),
     conda:
         "../envs/awk.yaml"
     shell:
