@@ -20,4 +20,4 @@ rule RSeQC_GTF2Bed:
     conda:
         "../envs/gffutils.yaml"
     script:
-        "../scripts/gtf2bed.py"
+        "../scripts/gtf_to_transcript_bed.py"
