@@ -2,9 +2,9 @@ rule RSeQC_Create_DB:
     input:
         "resources/ensembl/genome.gtf.gz"
     output:
-        "results/qc/rseqc/annotation.db"
+        "resources/ensembl/rseqc_annotation.db"
     log:
-        "results/logs/rseqc_create_db.log"
+        "logs/rseqc_create_db.log"
     conda:
         "../envs/gffutils.yaml"
     script:

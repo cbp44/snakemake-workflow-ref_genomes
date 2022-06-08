@@ -31,7 +31,7 @@ rule Determine_FASTA_File:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
+        curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_url("fasta", "dna"),
         file_ext="-e 'dna.primary_assembly.fa.gz$' -e 'dna.toplevel.fa.gz$'",
     shadow:
@@ -39,7 +39,7 @@ rule Determine_FASTA_File:
     cache: True
     retries: 3
     shell:
-        "(curl {params.curl} {params.base_url}CHECKSUMS "
+        "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 | grep {params.file_ext} > files.txt; "
         "cat files.txt; "
@@ -64,16 +64,16 @@ rule Download_Genome_FASTA:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
+        curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=lambda wc: get_ensembl_url("fasta", "dna"),
-    # shadow:
-    #     "shallow"
+    shadow:
+        "shallow"
     cache: True
     retries: 3
     shell:
         "("
         "files=$(cat {input}); "
-        'curl -o {output} {params.curl} {params.base_url}"$files"'
+        'curl -o {output} {params.curl} {params.base_url}/"$files"'
         ") &> {log}"
 
 
@@ -87,21 +87,20 @@ rule Download_Gene_Annotation:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        # curl="--insecure --retry 3 --retry-connrefused
-        curl="--show-error --silent --fail-with-body",
+        curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=get_ensembl_url("gtf"),
         file_ext=lambda wc: "^{0}\..+\.[[:digit:]]+\.gtf\.gz$".format(
             config["ref"]["species"].capitalize()
         ),
-    # shadow:
-    #     "shallow"
+    shadow:
+        "shallow"
     cache: True
     retries: 3
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
         "   | cut -d ' ' -f 3 > files.txt; "
-        "curl -o {output.gtf} {params.curl} {params.base_url}$(grep -E '{params.file_ext}' files.txt); "
+        "curl -o {output.gtf} {params.curl} {params.base_url}/$(grep -E '{params.file_ext}' files.txt); "
         "rm -f files.txt"
         ") &> {log}"
 
@@ -118,8 +117,7 @@ rule Download_VCF_Annotation:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        # curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
-        curl="--show-error --silent --fail-with-body",
+        curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         base_url=get_ensembl_url("variation/vcf"),
         # vcf_url=lambda wc: get_ensembl_url("variation/vcf", f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz"),
         vcf_url=lambda wc: f"{config['ref']['species']}_{wc.vcf_type}.vcf.gz",

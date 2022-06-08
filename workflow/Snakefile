@@ -24,6 +24,8 @@ def get_all_inputs():
 
     input_list.append("resources/ensembl/genome_info.json")
 
+    input_list.append("resources/ensembl/rseqc_annotation.db")
+
     if config["ref"]["species"] == "homo_sapiens":
         input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
         # input_list.append("resources/ensembl/phenotype_associated_variants.vcf.gz")

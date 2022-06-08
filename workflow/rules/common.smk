@@ -3,7 +3,7 @@ def get_ensembl_url(filetype, *args):
     specific filetype (like fasta, gtf, etc.) and optional postfix strings.
     """
     species = config["ref"]["species"]
-    base_url = f"https://ftp.ensembl.org/pub/current_{filetype}/{species}"
+    base_url = f"ftp://ftp.ensembl.org/pub/current_{filetype}/{species}"
     
     url_strings = [base_url] + list(args)
 

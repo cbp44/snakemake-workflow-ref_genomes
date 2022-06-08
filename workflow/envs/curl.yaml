@@ -1,6 +1,7 @@
 name: curl
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - conda-forge::ca-certificates
   - conda-forge::curl=7.83.*

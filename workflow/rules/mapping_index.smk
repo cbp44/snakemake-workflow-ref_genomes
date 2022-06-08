@@ -7,8 +7,7 @@ rule Get_Genome_Length:
     input:
         fasta="resources/ensembl/genome.fa.gz",
     output:
-        # ensure(temp("resources/ensembl/genome.fa.seqlen"), non_empty=True),
-        pipe("resources/ensembl/genome.fa.seqlen"),
+        ensure(temp("resources/ensembl/genome.fa.seqlen"), non_empty=True),
     params:
         awk=workflow.source_path("../scripts/seqlen.awk"),
     conda:
@@ -21,8 +20,7 @@ rule Calc_STAR_Params:
     input:
         "resources/ensembl/genome.fa.seqlen",
     output:
-        pipe("resources/ensembl/genome.star_param.genomeSAindexNbases")
-        # ensure(temp("resources/ensembl/genome.star_param.genomeSAindexNbases"), non_empty=True)
+        ensure(temp("resources/ensembl/genome.star_param.genomeSAindexNbases"), non_empty=True)
     script:
         "../scripts/calc_star_param.py"
 
