@@ -1,8 +1,7 @@
-name: star
+name: gffutils
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::star=2.7.9a
-  - conda-forge::gzip=1.12
+  - bioconda::gffutils=0.11.0

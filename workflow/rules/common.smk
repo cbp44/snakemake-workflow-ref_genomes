@@ -1,13 +1,13 @@
-def get_ensembl_base_url(filetype, postfix=""):
-    # ensembl_release = config["ref"]["ensembl_release"]
+def get_ensembl_url(filetype, *postfix):
+    """Get a full Ensembl download URL for the configured species given a
+    specific filetype (like fasta, gtf, etc.) and optional postfix strings.
+    """
     species = config["ref"]["species"]
-    base_url = "https://ftp.ensembl.org/pub/current_{0}/{1}/{2}{3}".format(
-        filetype, species, postfix, "" if not postfix else "/"
-    )
+    base_url = f"https://ftp.ensembl.org/pub/current_{filetype}/{species}"
+    
+    url_strings = [base_url] + list(postfix)
 
-    # base_url += postfix
-
-    return base_url
+    return "/".join(url_strings)
 
 
 def read_file_line(filename):

@@ -1,4 +1,4 @@
-rule download_genome_metadata:
+rule Download_Genome_Metadata:
     output:
         json="resources/ensembl/{metadata_type}.json",
     params:
@@ -10,11 +10,12 @@ rule download_genome_metadata:
     shadow:
         "shallow"
     cache: True
+    retries: 3
     script:
         "../scripts/ensembl_rest_api.py"
 
 
-rule determine_fasta_file:
+rule Determine_FASTA_File:
     """
     Determine the correct Ensembl genome fasta file to get.
 
@@ -22,7 +23,7 @@ rule determine_fasta_file:
     dna.toplevel.fa.gz one.
     """
     output:
-        temp("resources/ensembl/genome_fasta_file.txt"),
+        ensure(temp("resources/ensembl/genome_fasta_file.txt"), non_empty=True),
     conda:
         "../envs/curl.yaml"
     log:
@@ -35,6 +36,8 @@ rule determine_fasta_file:
         file_ext="-e 'dna.primary_assembly.fa.gz$' -e 'dna.toplevel.fa.gz$'",
     shadow:
         "shallow"
+    cache: True
+    retries: 3
     shell:
         "(curl {params.curl} {params.base_url}CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -49,7 +52,7 @@ rule determine_fasta_file:
         ") &> {log}"
 
 
-rule download_genome_fasta:
+rule Download_Genome_FASTA:
     input:
         "resources/ensembl/genome_fasta_file.txt",
     output:
@@ -63,9 +66,10 @@ rule download_genome_fasta:
         # and http times out for larger files
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
         base_url=lambda wc: get_ensembl_base_url("fasta", "dna"),
-    shadow:
-        "shallow"
+    # shadow:
+    #     "shallow"
     cache: True
+    retries: 3
     shell:
         "("
         "files=$(cat {input}); "
@@ -73,7 +77,7 @@ rule download_genome_fasta:
         ") &> {log}"
 
 
-rule download_gene_annotation:
+rule Download_Gene_Annotation:
     output:
         gtf="resources/ensembl/genome.gtf.gz",
     conda:
@@ -83,14 +87,16 @@ rule download_gene_annotation:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
-        base_url=get_ensembl_base_url("gtf"),
+        # curl="--insecure --retry 3 --retry-connrefused
+        curl="--show-error --silent --fail-with-body",
+        base_url=get_ensembl_url("gtf"),
         file_ext=lambda wc: "^{0}\..+\.[[:digit:]]+\.gtf\.gz$".format(
             config["ref"]["species"].capitalize()
         ),
-    shadow:
-        "shallow"
+    # shadow:
+    #     "shallow"
     cache: True
+    retries: 3
     shell:
         "(curl {params.curl} {params.base_url}/CHECKSUMS "
         "   | sed 's/  */ /g' "
@@ -100,11 +106,11 @@ rule download_gene_annotation:
         ") &> {log}"
 
 
-rule download_vcf_annotation:
+rule Download_VCF_Annotation:
     output:
-        multiext("resources/ensembl/{vcf_type}_variants", ".vcf.gz", ".vcf.gz.csi")
-        # vcf="resources/ensembl/{vcf_type}_variants.vcf.gz",
-        # csi="resources/ensembl/{vcf_type}_variants.vcf.gz.csi",
+        multiext("resources/ensembl/{vcf_type}_variants", 
+            ".vcf.gz", 
+            ".vcf.gz.csi")
     conda:
         "../envs/curl.yaml"
     log:
@@ -112,24 +118,25 @@ rule download_vcf_annotation:
     params:
         # --insecure used because https fails cert validation
         # and http times out for larger files
-        curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
-        base_url=lambda wc: get_ensembl_base_url("variation/vcf"),
-        server_filename=lambda wc: "1000GENOMES-phase_3"
-        if wc.vcf_type == "1000genomes"
-        else "{0}_{1}".format(config["ref"]["species"], wc.vcf_type),
+        # curl="--insecure --retry 3 --retry-connrefused --show-error --silent --fail-with-body",
+        curl="--show-error --silent --fail-with-body",
+        # base_url=get_ensembl_url("variation/vcf"),
+        vcf_url=lambda wc: get_ensembl_url("variation/vcf", 
+            f"{config["ref"]["species"]}_{wc.vcf_type}.vcf.gz"),
+        csi_url+lambda wc: get_ensembl_url("variation/vcf", 
+            f"{config["ref"]["species"]}_{wc.vcf_type}.vcf.gz.csi"),
+        server_filename=lambda wc: f"{config["ref"]["species"]}_{wc.vcf_type}"
     wildcard_constraints:
         vcf_type="|".join(
             [
                 "clinically_associated",
                 "phenotype_associated",
-                "1000genomes",
             ]
         ),
-    shadow:
-        "shallow"
     cache: True
+    retries: 3
     shell:
-        "("
-        "   curl -o {output[0]} {params.curl} {params.base_url}{params.server_filename}.vcf.gz; "
-        "   curl -o {output[1]} {params.curl} {params.base_url}{params.server_filename}.vcf.gz.csi"
-        ") &> {log}"
+        """
+        (curl -o {output[0]} {params.curl} {params.vcf_url} \
+         && curl -o {output[1]} {params.curl} {params.csi_url}) &> {log}
+        """

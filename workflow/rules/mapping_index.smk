@@ -1,12 +1,14 @@
 import os.path
-from math import log2
 
 
-rule get_genome_length:
+rule Get_Genome_Length:
+    """Calculate the total length of the genome from the FASTA sequence.
+    """
     input:
         fasta="resources/ensembl/genome.fa.gz",
     output:
-        "resources/ensembl/genome.fa.seqlen",
+        # ensure(temp("resources/ensembl/genome.fa.seqlen"), non_empty=True),
+        pipe("resources/ensembl/genome.fa.seqlen"),
     params:
         awk=workflow.source_path("../scripts/seqlen.awk"),
     conda:
@@ -15,16 +17,17 @@ rule get_genome_length:
         "awk -f {params.awk} <(zcat {input.fasta}) > {output}"
 
 
-rule calc_star_param:
+rule Calc_STAR_Params:
     input:
         "resources/ensembl/genome.fa.seqlen",
     output:
-        ensure("resources/ensembl/genome.star_param.genomeSAindexNbases", non_empty=True)
+        pipe("resources/ensembl/genome.star_param.genomeSAindexNbases")
+        # ensure(temp("resources/ensembl/genome.star_param.genomeSAindexNbases"), non_empty=True)
     script:
         "../scripts/calc_star_param.py"
 
 
-rule star_index:
+rule Create_STAR_Index:
     input:
         fasta="resources/ensembl/genome.fa.gz",
         annotation="resources/ensembl/genome.gtf.gz",
@@ -50,9 +53,9 @@ rule star_index:
         "STAR --runThreadN {threads} --runMode genomeGenerate"
         " --outTmpDir {params.outTmpDir} --genomeDir {output}"
         " --genomeSAindexNbases {params.genomeSAindexNbases}"
-        # " --genomeSAindexNbases $(cat {input.genomeSAindexNbases})"
         " --genomeFastaFiles {params.fasta}"
         " --sjdbOverhang {params.sjdbOverhang}"
         " --sjdbGTFfile {params.gtf}; "
+        "mv Log.out {output}; "
         "rm -rf {params.fasta} {params.gtf} {params.outTmpDir}"
         ") &> {log}"

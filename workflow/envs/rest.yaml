@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - ca-certificates
-  - curl
-  - urllib3
+  - conda-forge::ca-certificates
+  - conda-forge::curl=7.83.*
+  - conda-forge::urllib3=1.26.*
   - python>3.9

@@ -1,8 +1,7 @@
 name: curl
 channels:
   - conda-forge
-  - defaults
 dependencies:
-  - ca-certificates
-  - curl
-  - gzip
+  - conda-forge::ca-certificates
+  - conda-forge::curl=7.83.*
+  - conda-forge::gzip=1.12
