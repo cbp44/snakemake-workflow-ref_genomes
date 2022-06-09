@@ -138,3 +138,23 @@ rule Download_VCF_Annotation:
         (curl -o {output[0]} {params.curl} {params.base_url}/{params.vcf_url} \
          && curl -o {output[1]} {params.curl} {params.base_url}/{params.csi_url}) &> {log}
         """
+
+# TODO: Make this programmatically determine GRCh38 version from genome_info.json
+rule Download_ClinVar_Variants:
+    # input:
+    output:
+        "resources/clinvar/clinvar.vcf.gz",
+        "resources/clinvar/clinvar.vcf.gz.tbi"
+    params:
+        curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
+        vcf="https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"
+    conda: "../envs/curl.yaml"
+    log: "logs/ensembl/download-clinvar-vcf.log"
+    cache: True
+    retries: 3
+    shell:
+        """
+        (curl -o {output[0]} {params.curl} {params.vcf}; \
+        curl -o {output[0]}.tbi {params.curl} {params.vcf}.tbi) &> {log}
+        """
+        
