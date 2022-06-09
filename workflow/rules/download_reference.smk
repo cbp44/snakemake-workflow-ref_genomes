@@ -143,8 +143,9 @@ rule Download_VCF_Annotation:
 rule Download_ClinVar_Variants:
     # input:
     output:
-        "resources/clinvar/clinvar.vcf.gz",
-        "resources/clinvar/clinvar.vcf.gz.tbi"
+        multiext("resources/clinvar/clinvar", 
+                 ".vcf.gz",
+                 ".vcf.gz.tbi")
     params:
         curl="--insecure --retry 3 --retry-connrefused --show-error --silent",
         vcf="https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"
