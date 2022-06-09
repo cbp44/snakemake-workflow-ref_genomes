@@ -41,7 +41,6 @@ def get_all_inputs():
     if config["ref"]["species"] == "homo_sapiens":
         input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
         input_list.append("resources/ensembl/cds_regions.tsv")
-        # input_list.append("resources/ensembl/phenotype_associated_variants.vcf.gz")
-        # input_list.append("resources/ensembl/variation_consequences.json")
+        input_list.append("resources/clinvar/clinvar.vcf.gz")
 
     return input_list
