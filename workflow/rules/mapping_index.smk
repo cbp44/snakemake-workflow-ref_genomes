@@ -57,3 +57,14 @@ rule Create_STAR_Index:
         "mv Log.out {output}; "
         "rm -rf {params.fasta} {params.gtf} {params.outTmpDir}"
         ") &> {log}"
+
+
+use rule Create_STAR_Index as Create_MANE_STAR_Index with:
+    input:
+        fasta="resources/ensembl/genome.fa.gz",
+        annotation="resources/ensembl/MANE.GRCh38.v1.0.gtf.gz",
+        genomeSAindexNbases="resources/ensembl/genome.star_param.genomeSAindexNbases",
+    output:
+        directory("resources/ensembl/star_genome_mane"),
+    log:
+        "logs/ensembl/star_index_mane.log",

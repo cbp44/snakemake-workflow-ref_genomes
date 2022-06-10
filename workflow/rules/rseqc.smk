@@ -16,7 +16,7 @@ rule RSeQC_GTF2Bed:
     output:
         bed="resources/ensembl/transcript_annotation.bed",
     log:
-        "results/logs/rseqc_gtf2bed.log"
+        "logs/rseqc_gtf2bed.log"
     conda:
         "../envs/gffutils.yaml"
     script:

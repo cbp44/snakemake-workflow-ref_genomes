@@ -1,4 +1,4 @@
-FROM docker.io/snakemake/snakemake:v7.8.1 AS base
+FROM docker.io/snakemake/snakemake:v7.8.2 AS base
 
 #################### snakemake ####################
 FROM base AS snakemake

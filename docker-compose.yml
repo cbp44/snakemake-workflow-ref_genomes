@@ -1,0 +1,31 @@
+version: "3"
+
+volumes:
+  conda-envs:
+    external: true
+
+services:
+  workflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ref_genomes:latest
+    command: ["snakemake","--use-conda","-c2","-p"]
+    volumes:
+      # Path to store conda environments, created externally
+      - conda-envs:/conda-envs
+
+      # Testing configurations
+      - "./.test/integration/homo_sapiens/config:/mnt/workflow/config"
+      - "./.test/integration/caenorhabditis_elegans/config:/mnt/workflow/config"
+      
+      # Logs
+      - "./.test/integration/homo_sapiens/logs:/mnt/workflow/logs"
+
+      # Paths to mount resources
+      # - "./.test/integration/homo_sapiens/resources:/mnt/workflow/resources"
+      - "/media/user/ref_genomes/homo_sapiens/resources:/mnt/workflow/resources"
+      # - "/mnt/local/disk2/genomes/homo_sapiens/resources:/mnt/workflow/resources/homo_sapiens"
+      
+      # Workflow code
+      - "./workflow:/mnt/workflow/workflow"

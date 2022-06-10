@@ -1,3 +1,5 @@
+HUMAN_ACC = "GRCh38"
+
 def get_ensembl_url(filetype, *args):
     """Get a full Ensembl download URL for the configured species given a
     specific filetype (like fasta, gtf, etc.) and optional postfix strings.
@@ -31,16 +33,19 @@ def get_all_inputs():
         )
     )
 
+    # Files that apply to any organism
     input_list.append("resources/ensembl/star_genome")
-
     input_list.append("resources/ensembl/genome_info.json")
-
     input_list.append("resources/ensembl/gffutils.db")
     input_list.append("resources/ensembl/transcript_annotation.bed")
 
+    # Files that only apply to human
     if config["ref"]["species"] == "homo_sapiens":
-        input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
+        input_list.append("resources/ensembl/star_genome_mane")
+        # input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
         input_list.append("resources/ensembl/cds_regions.tsv")
         input_list.append("resources/clinvar/clinvar.vcf.gz")
+        input_list.append("resources/clinvar/clinvar.filtered.vcf.gz")
+        input_list.append("resources/ensembl/MANE.GRCh38.v1.0.gtf.gz")
 
     return input_list
