@@ -12,6 +12,7 @@ _exclude:
   - "!Dockerfile"
   - "!README.md"
   - "!.copier-answers.yml"
+  - "!docker-compose.yml"
   
 # _tasks:
 #   - "mkdir resources"
