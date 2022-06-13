@@ -1,4 +1,6 @@
-rule Download_Genome_Metadata:
+rule Fetch_Metadata:
+    """Downloads a JSON file with metadata about the reference genome.
+    """
     output:
         json="resources/ensembl/{metadata_type}.json",
     params:
@@ -52,7 +54,7 @@ rule Determine_FASTA_File:
         ") &> {log}"
 
 
-rule Download_Genome_FASTA:
+rule Fetch_FASTA:
     input:
         "resources/ensembl/genome_fasta_file.txt",
     output:
@@ -77,7 +79,7 @@ rule Download_Genome_FASTA:
         ") &> {log}"
 
 
-rule Download_Gene_Annotation:
+rule Fetch_Gene_Annotations:
     output:
         gtf="resources/ensembl/genome.gtf.gz",
     conda:

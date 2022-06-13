@@ -25,7 +25,7 @@ rule Calc_STAR_Params:
         "../scripts/calc_star_param.py"
 
 
-rule Create_STAR_Index:
+rule Mapping_Index:
     input:
         fasta="resources/ensembl/genome.fa.gz",
         annotation="resources/ensembl/genome.gtf.gz",
@@ -59,12 +59,13 @@ rule Create_STAR_Index:
         ") &> {log}"
 
 
-use rule Create_STAR_Index as Create_MANE_STAR_Index with:
-    input:
-        fasta="resources/ensembl/genome.fa.gz",
-        annotation="resources/ensembl/MANE.GRCh38.v1.0.gtf.gz",
-        genomeSAindexNbases="resources/ensembl/genome.star_param.genomeSAindexNbases",
-    output:
-        directory("resources/ensembl/star_genome_mane"),
-    log:
-        "logs/ensembl/star_index_mane.log",
+if is_human_genome():
+    use rule Mapping_Index as Mapping_Index_MANE with:
+        input:
+            fasta="resources/ensembl/genome.fa.gz",
+            annotation="resources/ensembl/MANE.GRCh38.v1.0.gtf.gz",
+            genomeSAindexNbases="resources/ensembl/genome.star_param.genomeSAindexNbases",
+        output:
+            directory("resources/ensembl/star_genome_mane"),
+        log:
+            "logs/ensembl/star_index_mane.log",

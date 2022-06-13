@@ -22,6 +22,12 @@ def read_file_line(filename):
         return f.readline().strip()
 
 
+def is_human_genome():
+    """Returns true if this is configured as a human genome
+    """
+    return config["ref"]["species"] == "homo_sapiens"
+
+
 def get_all_inputs():
     input_list = []
 
@@ -40,12 +46,13 @@ def get_all_inputs():
     input_list.append("resources/ensembl/transcript_annotation.bed")
 
     # Files that only apply to human
-    if config["ref"]["species"] == "homo_sapiens":
+    if is_human_genome():
         input_list.append("resources/ensembl/star_genome_mane")
         # input_list.append("resources/ensembl/clinically_associated_variants.vcf.gz")
-        input_list.append("resources/ensembl/cds_regions.tsv")
+        input_list.append("resources/ensembl/mane-gffutils.db")
+        input_list.append("resources/ensembl/mane-cds_regions.tsv")
         input_list.append("resources/clinvar/clinvar.vcf.gz")
         input_list.append("resources/clinvar/clinvar.filtered.vcf.gz")
-        input_list.append("resources/ensembl/MANE.GRCh38.v1.0.gtf.gz")
+        input_list.append(f"resources/ensembl/MANE.{HUMAN_ACC}.v1.0.gtf.gz")
 
     return input_list

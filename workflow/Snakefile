@@ -12,6 +12,7 @@ validate(config, "schemas/config.schema.yaml")
 include: "rules/common.smk"
 include: "rules/download_reference.smk"
 include: "rules/download_variants.smk"
+include: "rules/gffutils.smk"
 include: "rules/mapping_index.smk"
 include: "rules/rseqc.smk"
 include: "rules/cds_regions.smk"

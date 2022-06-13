@@ -1,16 +1,7 @@
-rule Create_Gffutils_DB:
-    input:
-        "resources/ensembl/genome.gtf.gz"
-    output:
-        "resources/ensembl/gffutils.db"
-    log:
-        "logs/rseqc_create_db.log"
-    conda:
-        "../envs/gffutils.yaml"
-    script:
-        "../scripts/create_gffutils_db.py"
-
-rule RSeQC_GTF2Bed:
+rule Transcript_BED:
+    """Creates a BED file containing all of the annotated transcript sites
+    for use by RESeQC in the RNA-seq workflow to determine coverage of reads.
+    """
     input:
         db="resources/ensembl/gffutils.db",
     output:
@@ -19,5 +10,6 @@ rule RSeQC_GTF2Bed:
         "logs/rseqc_gtf2bed.log"
     conda:
         "../envs/gffutils.yaml"
+    cache: True
     script:
         "../scripts/gtf_to_transcript_bed.py"
