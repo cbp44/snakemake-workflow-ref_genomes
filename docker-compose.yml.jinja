@@ -1,0 +1,54 @@
+version: "3"
+
+# Date created: {{ date }}
+# Species: {{ species.replace("_", " ").upper() }}
+
+volumes:
+  # Volume to store conda environments created by Snakemake. This volume can be
+  # shared across workflows so a conda env doesn't need to be recreated
+  # if it has been used in a previous workflow.
+  conda-envs:
+    external: true
+
+    # For testing on a PC with a small root partition, create a named bind mount
+    # with the following command first.
+    #
+    #   mkdir /media/user/data/conda-envs
+    #   docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/conda-envs conda-envs
+    
+
+  # Volume to store reference genome workflows and data
+  # To make it easy to access the files on the host, it is best to create a 
+  # named bind mount first something like the command below.
+  # You can replace device= with whatever location you want the data saved.
+  #
+  #   mkdir /media/user/data/genomes
+  #   docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/genomes genomes
+  genomes:
+    external: true
+
+
+services:
+  # The service to run the workflow
+  workflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: workflow
+      args:
+        WORKFLOW_PATH: /mnt/genomes/{{ species }}
+    image: {{ species }}:{{ date }}
+    command: ["snakemake","--use-conda","-c2","-p"]
+    working_dir: "/mnt/genomes/{{ species }}"
+    volumes:
+      # Path to store conda environments, created externally
+      - conda-envs:/conda-envs
+      
+      # External genomes volumne
+      - genomes:/mnt/genomes
+
+      - "./config:/mnt/genomes/{{ species }}/config"
+      - "./logs:/mnt/genomes/{{ species }}/logs"
+      - "./resources:/mnt/genomes/{{ species }}/resources"
+      - "./workflow:/mnt/genomes/{{ species }}/workflow"
+      

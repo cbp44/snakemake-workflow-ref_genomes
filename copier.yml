@@ -6,14 +6,20 @@ _exclude:
   - "*"
   - "!config"
   - "!config/**"
+  - "!images"
+  - "!images/*.pdf"
   - "!workflow"
   - "!workflow/**"
   - "!.dockerignore"
+  - "!.editorconfig"
   - "!Dockerfile"
   - "!README.md"
   - "!.copier-answers.yml"
   - "!docker-compose.yml"
   
+_jinja_extensions:
+  - "jinja2_time.TimeExtension"
+
 # _tasks:
 #   - "mkdir resources"
   
@@ -23,12 +29,12 @@ species:
   help: Give the species whose reference genome we are obtaining
   default: caenorhabditis_elegans
   choices:
-    "Human": "homo_sapiens"
-    "Mouse": "mus_musculus"
-    "Zebrafish": "danio_rerio"
+    "Human (H. sapiens)": "homo_sapiens"
+    "Mouse (M. musculus)": "mus_musculus"
+    "Zebrafish (D. rerio)": "danio_rerio"
     "Worm (C. elegans)": "caenorhabditis_elegans"
     "Fruitfly (D. melanogaster)": "drosophila_melanogaster"
-    "Mouse Lemur": "microcebus_murinus"
+    "Mouse Lemur (M. murinus)": "microcebus_murinus"
     # "Mouse 129S1/SvImJ": "mus_musculus_129s1svimj"
     # "Mouse A/J": "mus_musculus_aj"
     # "Mouse AKR/J": "mus_musculus_akrj"
@@ -44,3 +50,9 @@ species:
     # "Mouse NZO/HlLtJ": "mus_musculus_nzohlltj"
     # "Mouse PWK/PhJ": "mus_musculus_pwkphj"
     # "Mouse WSB/EiJ": "mus_musculus_wsbeij"
+
+date:
+  type: str
+  help: Specify the date to use for naming project directories
+  default: "{% now 'utc', '%Y-%m-%d' %}"
+  placeholder: "{% now 'utc', '%Y-%m-%d' %}"

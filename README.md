@@ -1,47 +1,30 @@
-# ngs-workflow-ref_genomes
+# snakemake-workflow-ref_genomes
 
 Snakemake workflow for downloading Ensembl reference genomes for use in downstream bioinformatics analyses.
 
-## Quickstart
+## Getting Started
 
-### Vagrant
-
-```shell
-# Start and provision the vagrant box
-host> vagrant up
-
-# Connect to the vagrant box through SSH
-host> vagrant ssh
-
-# Run copier and answer the questions
-vagrant> conda activate copier
-vagrant> copier /vagrant ~/test
-vagrant> cd ~/test
-vagrant> conda activate snakemake
-vagrant> snakemake --profile local
-```
-
-#### Stop VM
-
-To stop the VM use the following command. You will later be able to start the same VM again with `vagrant up`.
+### Docker
 
 ```shell
-vagrant halt
-```
+# Create conda-env Docker volume to share conda envs among workflows
+docker volume create conda-envs
+# docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/conda-envs conda-envs
 
-#### Destroy VM
+# Create named bind mount to hold genome data
+docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/genomes genomes
 
-This will permanently halt and delete the VM.
+# Build copier
+docker compose build copier
 
-```shell
-vagrant destroy
-```
+# Run copier to initialize a new workflow, answer the questions and pick human
+docker compose run --rm -it copier copy /mnt/workflow /mnt/genomes/homo_sapiens
 
-#### Firewall issues
+cd /media/user/data/genomes/homo_sapiens
 
-For Vagrant to work, SSH and NFS connections need to be allowed. Here are example `ufw` rules to allow them on the bridge interface. You only need this if you are running a restrictive firewall that denys outbound traffic by default.
+# Build the workflow image
+docker compose build workflow
 
-```shell
-host> ufw allow in on virbr1 from 192.168.121.0/24 to any port 2049 proto tcp comment 'NFS'
-host> ufw allow out on virbr1 to any port 22 proto tcp comment 'SSH'
+# Run Snakemake within the workflow service to automatically run the workflow
+docker compose run --rm -it workflow snakemake --use-conda -c2 -p -n
 ```

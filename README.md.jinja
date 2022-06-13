@@ -1,10 +1,26 @@
-# ngs-workflow-reference_genomes
+# snakemake-workflow-ref_genomes ({{ species.replace("_", " ").upper() }})
 
 A Snakemake workflow to download various files from Ensembl for a given reference genome and create a STAR aligner index.
 
-Files downloaded include:
-- Reference FASTA files
-- Gene annotations in GTF format
-- VCF files of pathogenic variants (human only)
+**Creation Date:** {{ date }}
+**Species:** {{ species.replace("_", " ").upper() }}
 
-- Species: {{ species }}
+## Getting Started
+
+```shell
+mkdir /media/user/data/genomes
+docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/genomes genomes
+
+mkdir /media/user/data/conda-envs
+docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/conda-envs conda-envs
+
+# Build the workflow image
+docker compose build workflow
+
+# Run Snakemake within the workflow service to automatically run the workflow
+docker compose run --rm -it workflow snakemake --use-conda -c2 -p -n
+
+# The rules that would be run if it wasn't in dry mode should show up
+# If everything looks, good, remove the -n flag and run it for real...
+docker compose run --rm -it workflow snakemake --use-conda -c2 -p 
+```

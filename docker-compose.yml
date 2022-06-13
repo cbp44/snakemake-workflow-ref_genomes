@@ -1,31 +1,57 @@
 version: "3"
 
 volumes:
-  conda-envs:
+  # # Volume to store conda environments created by Snakemake. This volume can be
+  # # shared across workflows so a conda env doesn't need to be recreated
+  # # if it has been used in a previous workflow.
+  # conda-envs:
+  #   # external: true
+
+  #   # For testing on a PC with a small root partition, create a named bind mount
+  #   # with the following command first, and uncomment external: true.
+  #   #
+  #   #   mkdir /media/user/data/conda-envs
+  #   #   docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/conda-envs conda-envs
+    
+
+  # Volume to store reference genome workflows and data
+  # To make it easy to access the files on the host, it is best to create a 
+  # named bind mount first something like the command below.
+  # You can replace device= with whatever location you want the data saved.
+  #
+  #   mkdir /media/user/data/genomes
+  #   docker volume create --opt type=none --opt o=bind --opt device=/media/user/data/genomes genomes
+  genomes:
     external: true
 
+
 services:
-  workflow:
+  # # The service that runs the workflow
+  # workflow:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: workflow
+  #   image: ref_genomes:latest
+  #   command: ["snakemake","--use-conda","-c2","-p"]
+  #   volumes:
+  #     # Path to store conda environments, defined above under volumes key
+  #     - conda-envs:/conda-envs
+  #     - genomes:/mnt/genomes
+  #     - "./config:/mnt/workflow/config"
+  #     - "./logs:/mnt/workflow/logs"
+  #     - "./resources:/mnt/workflow/resources"
+      
+
+  # The service to configure and initialize a new workflow
+  copier:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ref_genomes:latest
-    command: ["snakemake","--use-conda","-c2","-p"]
+      target: copier
+    image: copier:latest
+    # Generate a c elegans workflow by default
+    command: ["copy","/mnt/workflow","/mnt/genomes/caenorhabditis_elegans"]
     volumes:
-      # Path to store conda environments, created externally
-      - conda-envs:/conda-envs
-
-      # Testing configurations
-      - "./.test/integration/homo_sapiens/config:/mnt/workflow/config"
-      - "./.test/integration/caenorhabditis_elegans/config:/mnt/workflow/config"
-      
-      # Logs
-      - "./.test/integration/homo_sapiens/logs:/mnt/workflow/logs"
-
-      # Paths to mount resources
-      # - "./.test/integration/homo_sapiens/resources:/mnt/workflow/resources"
-      - "/media/user/ref_genomes/homo_sapiens/resources:/mnt/workflow/resources"
-      # - "/mnt/local/disk2/genomes/homo_sapiens/resources:/mnt/workflow/resources/homo_sapiens"
-      
-      # Workflow code
-      - "./workflow:/mnt/workflow/workflow"
+      # - conda-envs:/conda-envs
+      - genomes:/mnt/genomes
