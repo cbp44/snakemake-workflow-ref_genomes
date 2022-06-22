@@ -50,7 +50,7 @@ RUN mamba create -y -q -n copier pip \
 ENV PATH /opt/conda/envs/copier/bin:${PATH}
 
 RUN install_packages build-essential \
-      && /opt/conda/envs/copier/bin/pip install copier==6.0.0 \
+      && /opt/conda/envs/copier/bin/pip install copier==6.0.0 jinja2-time==0.2.0 \
       && apt autoremove -y build-essential
 
 RUN echo "source activate copier" >> ~/.bashrc \
