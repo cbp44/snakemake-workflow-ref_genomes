@@ -49,7 +49,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: copier
-    image: copier:latest
+    image: copier_genome:latest
     # Generate a c elegans workflow by default
     command: ["copy","/mnt/workflow","/mnt/genomes/caenorhabditis_elegans"]
     volumes:

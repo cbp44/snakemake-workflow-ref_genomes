@@ -1,8 +1,6 @@
 FROM docker.io/snakemake/snakemake:v7.8.2 AS base
 
-#################### snakemake ####################
-# FROM base AS snakemake
-
+#################### base ####################
 # Important to set this for using sort commands
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
@@ -19,7 +17,7 @@ ENV SNAKEMAKE_OUTPUT_CACHE=/mnt/snakemake-cache
 
 # Where snakemake conda environments get created
 ENV SNAKEMAKE_CONDA_PREFIX=/conda-envs
-#################### /snakemake ####################
+#################### /base ####################
 
 
 #################### workflow ####################
@@ -52,7 +50,7 @@ RUN mamba create -y -q -n copier pip \
 ENV PATH /opt/conda/envs/copier/bin:${PATH}
 
 RUN install_packages build-essential \
-      && /opt/conda/envs/copier/bin/pip install copier==6.0.0 jinja2-time==0.2.0 \
+      && /opt/conda/envs/copier/bin/pip install copier==6.0.0 \
       && apt autoremove -y build-essential
 
 RUN echo "source activate copier" >> ~/.bashrc \
